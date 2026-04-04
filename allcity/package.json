@@ -1,0 +1,24 @@
+{
+  "name": "allcity-clothing",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "15.3.6",
+    "react": "^18",
+    "react-dom": "^18",
+    "@vercel/blob": "^0.27.0",
+    "stripe": "^14.21.0",
+    "@stripe/stripe-js": "^3.4.0",
+    "@stripe/react-stripe-js": "^2.7.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8",
+    "autoprefixer": "^10"
+  }
+}
