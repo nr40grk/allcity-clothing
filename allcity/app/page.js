@@ -58,8 +58,8 @@ export default function HomePage() {
           <h1 className="font-display text-[22vw] md:text-[20vw] leading-[0.85] text-[#F0EDE8] fade-up fade-up-2 tracking-tight">ALL</h1>
           <div className="flex items-end justify-between gap-4">
             <h1 className="font-display text-[22vw] md:text-[20vw] leading-[0.85] text-[#FF2200] fade-up fade-up-3 tracking-tight">CITY</h1>
-            <div className="pb-4 md:pb-8 flex flex-col items-end gap-3 fade-up fade-up-4">
-              <p className="font-mono text-xs text-[#F0EDE8]/50 text-right max-w-[180px] leading-relaxed">{t('home.tagline')}</p>
+            <div className="pb-4 md:pb-8 flex flex-col items-end gap-3">
+              <p className="font-mono text-xs text-[#F0EDE8]/50 text-right max-w-[200px] leading-relaxed fade-up fade-up-4">{t('home.tagline')}</p>
               <Link href="/products" className="font-mono text-xs uppercase tracking-widest border border-[#F0EDE8]/30 px-5 py-3 text-[#F0EDE8]/70 hover:bg-[#FF2200] hover:border-[#FF2200] hover:text-[#080808] transition-all duration-200">
                 {t('home.shopNow')}
               </Link>
