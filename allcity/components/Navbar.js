@@ -48,21 +48,20 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Main navbar — 3 column: links | logo | actions */}
-      <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm">
-        <div className="max-w-[1400px] mx-auto px-6 h-14 grid grid-cols-3 items-center">
+      {/* Navbar — logo absolutely centered, left/right flex */}
+      <nav className="relative border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm">
+        <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center justify-between">
 
-          {/* Left — nav links */}
-          <div className="hidden md:flex items-center gap-8">
-            {[['/', 'nav.home'], ['/products', 'nav.products'], ['/shipping', 'nav.shipping']].map(([href, key]) => (
-              <Link key={href} href={href} className="font-mono text-xs text-[#F0EDE8]/70 uppercase tracking-widest hover:text-[#F0EDE8] transition-colors link-red">
-                {t(key)}
-              </Link>
-            ))}
-          </div>
-          {/* Mobile left — burger */}
-          <div className="flex md:hidden items-center">
-            <button className="text-[#F0EDE8]/60 hover:text-[#F0EDE8]" onClick={() => setMenuOpen(!menuOpen)}>
+          {/* Left */}
+          <div className="flex items-center gap-8 flex-1">
+            <div className="hidden md:flex items-center gap-8">
+              {[['/', 'nav.home'], ['/products', 'nav.products'], ['/shipping', 'nav.shipping']].map(([href, key]) => (
+                <Link key={href} href={href} className="font-mono text-xs text-[#F0EDE8]/70 uppercase tracking-widest hover:text-[#F0EDE8] transition-colors link-red">
+                  {t(key)}
+                </Link>
+              ))}
+            </div>
+            <button className="flex md:hidden text-[#F0EDE8]/60 hover:text-[#F0EDE8]" onClick={() => setMenuOpen(!menuOpen)}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 {menuOpen
                   ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
@@ -71,15 +70,15 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Center — logo */}
-          <div className="flex justify-center">
-            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+          {/* Center — logo pinned to absolute center of viewport */}
+          <div className="absolute left-0 right-0 flex justify-center pointer-events-none">
+            <Link href="/" className="pointer-events-auto flex items-center hover:opacity-80 transition-opacity">
               <AllCityLogo size={30} />
             </Link>
           </div>
 
-          {/* Right — actions */}
-          <div className="flex items-center justify-end gap-3">
+          {/* Right */}
+          <div className="flex items-center gap-3 flex-1 justify-end">
             <LanguageToggle />
             <Link href="/products" aria-label="Search" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
