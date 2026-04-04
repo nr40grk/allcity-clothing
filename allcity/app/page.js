@@ -25,7 +25,7 @@ function HeroVideo() {
   );
 }
 
-const marqueeText = '— APPAREL BORN IN THE STREETS — HOOD CONTROLLING — F*CK THE GAME — ALLCITY CLOTHING — ';
+const marqueeText = 'Hood Controlling. F*ck the Game. Allcity Clothing. — Apparel born in the streets. No rules. No limits. — ';
 
 export default function HomePage() {
   const t = useT();
