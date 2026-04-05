@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { addSubscriber } from '@/lib/subscribers';
-import { resend, FROM_EMAIL } from '@/lib/resend';
+import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { WelcomeEmail } from '@/emails/WelcomeEmail';
 import { createElement } from 'react';
 
@@ -17,8 +17,9 @@ export async function POST(req) {
       return NextResponse.json({ ok: false, message: 'Already subscribed.' });
     }
 
-    // Send welcome email
-    if (process.env.RESEND_API_KEY) {
+    // Send welcome email only if Resend is configured
+    const resend = getResend();
+    if (resend) {
       await resend.emails.send({
         from: FROM_EMAIL,
         to: email,
