@@ -8,9 +8,9 @@ import LanguageToggle from './LanguageToggle';
 function AllCityLogo() {
   return (
     <svg
-      width="72"
+      width="80"
       height="28"
-      viewBox="0 0 280 108"
+      viewBox="0 0 220 108"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ display: 'block', flexShrink: 0 }}
@@ -19,8 +19,8 @@ function AllCityLogo() {
       <path d="M28 52 L32 44 L38 40 L46 38 L54 36 L62 40 L68 38 L74 42 L72 50 L76 56 L72 64 L66 68 L60 72 L52 74 L44 72 L36 68 L30 62 L28 52Z" fill="#080808"/>
       <path d="M46 38 L50 32 L56 30 L60 34 L64 36 L62 40Z" fill="#080808"/>
       <path d="M68 38 L72 34 L76 36 L78 42 L74 42Z" fill="#080808"/>
-      <text x="116" y="60" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="44" fill="#F0EDE8" letterSpacing="-1">ALL</text>
-      <text x="116" y="102" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="44" fill="#F0EDE8" letterSpacing="-1">CITY</text>
+      <text x="108" y="60" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="44" fill="#F0EDE8" letterSpacing="-1">ALL</text>
+      <text x="108" y="102" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="44" fill="#F0EDE8" letterSpacing="-1">CITY</text>
     </svg>
   );
 }
