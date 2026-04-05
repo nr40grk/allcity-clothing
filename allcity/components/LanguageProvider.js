@@ -6,7 +6,7 @@ const translations = {
     nav: { home: 'Home', products: 'Products', shipping: 'Shipping & Payment' },
     home: {
       collection: 'SS25 Collection', location: 'Athens, GR',
-      tagline: 'Apparel born in the streets. No rules. No limits.',
+      tagline: 'Apparel born in the streets. No rules. No limits. Hood Controlling. F*ck the Game. Allcity Clothing.',
       shopNow: 'Shop Now', viewAll: 'View All →', productsTitle: 'Products',
       strip1Label: 'Shipping', strip1Desc: 'Greece, Cyprus & Bulgaria: 1–3 days. International: calculated at checkout.',
       strip2Label: 'Street Quality', strip2Desc: 'Every piece is built for the city. No compromises on material or construction.',
@@ -47,7 +47,7 @@ const translations = {
     nav: { home: 'Αρχική', products: 'Προϊόντα', shipping: 'Αποστολή & Πληρωμή' },
     home: {
       collection: 'Συλλογή ΑΧ25', location: 'Αθήνα, GR',
-      tagline: 'Ρούχα γεννημένα στους δρόμους. Χωρίς κανόνες. Χωρίς όρια.',
+      tagline: 'Ρούχα γεννημένα στους δρόμους. Χωρίς κανόνες. Χωρίς όρια. Hood Controlling. F*ck the Game. Allcity Clothing.',
       shopNow: 'Αγόρασε Τώρα', viewAll: 'Δες Όλα →', productsTitle: 'Προϊόντα',
       strip1Label: 'Αποστολή', strip1Desc: 'Ελλάδα, Κύπρος & Βουλγαρία: 1–3 μέρες. Διεθνώς: υπολογίζεται στο checkout.',
       strip2Label: 'Street Ποιότητα', strip2Desc: 'Κάθε κομμάτι φτιαγμένο για την πόλη. Χωρίς συμβιβασμούς.',
