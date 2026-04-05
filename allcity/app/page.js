@@ -70,9 +70,14 @@ export default function HomePage() {
         {/* Marquee */}
         <div className="relative z-10 overflow-hidden border-t border-[#1a1a1a] py-3 bg-[#080808]">
           <div className="marquee-track">
-            {[...Array(4)].map((_, i) => (
-              <span key={i} className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/20 whitespace-nowrap">
-                {marqueeText}
+            {/* Two identical halves — animation moves exactly -50% so loop is seamless */}
+            {[...Array(2)].map((_, half) => (
+              <span key={half} className="flex whitespace-nowrap">
+                {[...Array(8)].map((_, i) => (
+                  <span key={i} className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/20 px-8">
+                    {marqueeText}
+                  </span>
+                ))}
               </span>
             ))}
           </div>
