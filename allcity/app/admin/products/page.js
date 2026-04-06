@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const SIZES_OPTIONS = ['XS','S','M','L','XL','XXL','ONE SIZE'];
 const CATEGORIES = ['jackets','hoodies','tees','pants','accessories'];
-const EMPTY_FORM = { name:'', price:'', salePrice:'', category:'jackets', available:true, isNew:false, image:'', sizes:['S','M','L','XL'], description:'', details:'' };
+const EMPTY_FORM = { name:'', price:'', salePrice:'', stock:'', category:'jackets', available:true, isNew:false, image:'', sizes:['S','M','L','XL'], description:'', details:'' };
 const bool = v => v === true || v === 'true';
 
 function Toggle({ on, onClick }) {
@@ -65,7 +65,7 @@ export default function AdminProducts() {
   function handleDrop(e) { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) uploadImage(f); }
 
   function startEdit(product) {
-    setForm({ ...product, available: bool(product.available), isNew: bool(product.isNew), salePrice: product.salePrice || '', details: Array.isArray(product.details) ? product.details.join('\n') : (product.details || '') });
+    setForm({ ...product, available: bool(product.available), isNew: bool(product.isNew), salePrice: product.salePrice || '', stock: product.stock != null ? String(product.stock) : '', details: Array.isArray(product.details) ? product.details.join('\n') : (product.details || '') });
     setEditingId(product.id); setShowForm(true); window.scrollTo({ top:0, behavior:'smooth' });
   }
 
@@ -75,7 +75,7 @@ export default function AdminProducts() {
   async function handleSave(e) {
     e.preventDefault();
     if (!form.image) { flash('Please upload a product image.'); return; }
-    const payload = { ...form, available: bool(form.available), isNew: bool(form.isNew), price: parseFloat(form.price), salePrice: form.salePrice ? parseFloat(form.salePrice) : null, details: form.details.split('\n').map(d => d.trim()).filter(Boolean) };
+    const payload = { ...form, available: bool(form.available), isNew: bool(form.isNew), price: parseFloat(form.price), salePrice: form.salePrice ? parseFloat(form.salePrice) : null, stock: form.stock !== '' ? parseInt(form.stock) : null, details: form.details.split('\n').map(d => d.trim()).filter(Boolean) };
     if (editingId) payload.id = editingId;
     const res = await fetch('/api/admin', { method: editingId ? 'PUT' : 'POST', headers: { 'Content-Type':'application/json', 'x-admin-token': token }, body: JSON.stringify(payload) });
     if (!res.ok) { flash('Error saving product.'); return; }
@@ -152,6 +152,7 @@ export default function AdminProducts() {
               <div className="col-span-2"><label className="label">Product Name *</label><input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="input w-full" placeholder="ALLCITY CORE JACKET" /></div>
               <div><label className="label">Original Price (€) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="input w-full" placeholder="120" /></div>
               <div><label className="label">Sale Price (€) — optional</label><input type="number" step="0.01" min="0" value={form.salePrice} onChange={e => setForm({...form, salePrice: e.target.value})} className="input w-full" placeholder="90" /></div>
+              <div><label className="label">Stock Quantity</label><input type="number" min="0" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})} className="input w-full" placeholder="0" /></div>
               <div><label className="label">Category</label><select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className="input w-full">{CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}</select></div>
               <div className="col-span-2"><label className="label">Description</label><input value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="input w-full" placeholder="Short product description" /></div>
               <div className="col-span-2"><label className="label">Details (one per line)</label><textarea value={form.details} onChange={e => setForm({...form, details: e.target.value})} className="input w-full h-24 resize-none" placeholder={"100% Nylon shell\nWaterproof coating"} /></div>
@@ -195,6 +196,11 @@ export default function AdminProducts() {
                     <div className="flex items-center gap-2">
                       {onSale ? <><span className="font-mono text-[11px] text-[#FF2200]">€{product.salePrice}</span><span className="font-mono text-[11px] text-[#F0EDE8]/20 line-through">€{product.price}</span></> : <span className="font-mono text-[11px] text-[#F0EDE8]/30">€{product.price}</span>}
                       <span className="font-mono text-[11px] text-[#F0EDE8]/20">· {product.category}</span>
+                      {product.stock != null && (
+                        <span style={{ color: product.stock === 0 ? '#FF2200' : product.stock <= 5 ? '#FF8800' : 'rgba(240,237,232,0.3)' }} className="font-mono text-[11px]">
+                          · {product.stock === 0 ? 'Out of stock' : `${product.stock} in stock`}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
