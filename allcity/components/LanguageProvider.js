@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const translations = {
   en: {
-    nav: { home: 'Home', products: 'Products', about: 'About', shipping: 'Shipping & Payment' },
+    nav: { home: 'Home', products: 'Products', about: 'About Us', shipping: 'Shipping & Payment' },
     home: {
       collection: 'SS25 Collection', location: 'Athens, GR',
       tagline: 'Apparel born in the streets. No rules. No limits. Hood Controlling. F*ck the Game. Allcity Clothing.',
@@ -44,7 +44,7 @@ const translations = {
     footer: { subscribe: 'Subscribe to our emails', emailPlaceholder: 'Email', storeLocation: 'Contact', findUs: '@allcity_clothing — Athens, GR' },
   },
   el: {
-    nav: { home: 'Αρχική', products: 'Προϊόντα', about: 'Σχετικά', shipping: 'Αποστολή & Πληρωμή' },
+    nav: { home: 'Αρχική', products: 'Προϊόντα', about: 'Σχετικά μας', shipping: 'Αποστολή & Πληρωμή' },
     home: {
       collection: 'Συλλογή ΑΧ25', location: 'Αθήνα, GR',
       tagline: 'Ρούχα γεννημένα στους δρόμους. Χωρίς κανόνες. Χωρίς όρια. Hood Controlling. F*ck the Game. Allcity Clothing.',

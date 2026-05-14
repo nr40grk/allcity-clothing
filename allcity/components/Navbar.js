@@ -77,10 +77,10 @@ export default function Navbar() {
               <Image
                 src="/logo.png"
                 alt="AllCity"
-                width={220}
-                height={92}
+                width={200}
+                height={200}
                 className="object-contain"
-                style={{ height: '58px', width: 'auto' }}
+                style={{ height: '52px', width: 'auto' }}
                 priority
               />
               <span className="font-display text-[#F0EDE8] tracking-tight leading-none hidden sm:block" style={{ fontSize: '22px' }}>
