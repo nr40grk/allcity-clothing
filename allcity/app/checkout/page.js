@@ -157,7 +157,7 @@ function CheckoutForm({ cart }) {
 export default function CheckoutPage() {
   const t = useT();
   return (
-    <div className="pt-16">
+    <div className="pt-20">
       <div className="px-6 pt-16 pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
         <h1 className="font-display text-6xl md:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>

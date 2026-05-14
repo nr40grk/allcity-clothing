@@ -15,7 +15,7 @@ export default function ProductPage() {
       setProduct(found); setAllProducts(data);
     }).catch(() => setNotFound(true)).finally(() => setLoading(false));
   }, [slug]);
-  if (loading) return <div className="pt-16 min-h-screen flex items-center justify-center"><span className="font-mono text-xs text-[#F0EDE8]/30 uppercase tracking-widest">Loading...</span></div>;
-  if (notFound) return <div className="pt-16 min-h-screen flex flex-col items-center justify-center gap-4"><span className="font-display text-6xl text-[#FF2200]">404</span><span className="font-mono text-xs text-[#F0EDE8]/40 uppercase tracking-widest">Product not found</span></div>;
+  if (loading) return <div className="pt-20 min-h-screen flex items-center justify-center"><span className="font-mono text-xs text-[#F0EDE8]/30 uppercase tracking-widest">Loading...</span></div>;
+  if (notFound) return <div className="pt-20 min-h-screen flex flex-col items-center justify-center gap-4"><span className="font-display text-6xl text-[#FF2200]">404</span><span className="font-mono text-xs text-[#F0EDE8]/40 uppercase tracking-widest">Product not found</span></div>;
   return <ProductDetail product={product} allProducts={allProducts} />;
 }

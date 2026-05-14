@@ -3,7 +3,7 @@ import { useT } from '@/components/LanguageProvider';
 export default function ShippingPage() {
   const t = useT();
   return (
-    <div className="pt-16">
+    <div className="pt-20">
       <div className="px-6 pt-16 pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
         <h1 className="font-display text-6xl md:text-8xl text-[#F0EDE8] tracking-tight leading-none whitespace-pre-line">{t('shipping.title')}</h1>
       </div>
