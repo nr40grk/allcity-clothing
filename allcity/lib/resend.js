@@ -1,4 +1,4 @@
-export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ALLCITY <noreply@allcity-clothing.com>';
+export const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'ALLCITY <info@allcityclothing.com>';
 export const STORE_NAME = 'ALLCITY';
 
 // Lazy init — avoids crash at build time when env var isn't set

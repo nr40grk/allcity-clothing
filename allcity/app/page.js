@@ -5,23 +5,24 @@ import ProductCard from '@/components/ProductCard';
 import { useT, useLanguage } from '@/components/LanguageProvider';
 
 function HeroVideo() {
-  const desktop = process.env.NEXT_PUBLIC_HERO_VIDEO_DESKTOP;
-  const mobile = process.env.NEXT_PUBLIC_HERO_VIDEO_MOBILE || '/videos/mobile-hero.mp4';
-  if (!desktop && !mobile) return null;
+  const src = process.env.NEXT_PUBLIC_HERO_VIDEO_MOBILE || '/videos/mobile-hero.mp4';
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden">
-      {desktop && (
-        <video autoPlay muted loop playsInline className="hidden md:block absolute inset-0 w-full h-full object-cover">
-          <source src={desktop} type="video/mp4" />
+    <>
+      {/* Mobile: full-screen background */}
+      <div className="md:hidden absolute inset-0 overflow-hidden">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
+          <source src={src} type="video/mp4" />
         </video>
-      )}
-      {(mobile || desktop) && (
-        <video autoPlay muted loop playsInline className="block md:hidden absolute inset-0 w-full h-full object-cover">
-          <source src={mobile || desktop} type="video/mp4" />
+        <div className="absolute inset-0 bg-[#080808]/55" />
+      </div>
+      {/* Desktop: right-side vertical panel */}
+      <div className="hidden md:block absolute top-0 right-0 bottom-0 w-[42%] overflow-hidden border-l border-[#1a1a1a]">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
+          <source src={src} type="video/mp4" />
         </video>
-      )}
-      <div className="absolute inset-0 bg-[#080808]/60" />
-    </div>
+        <div className="absolute inset-0 bg-[#080808]/25" />
+      </div>
+    </>
   );
 }
 
