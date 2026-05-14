@@ -23,7 +23,7 @@ function BoxNowNote({ lang }) {
         rel="noreferrer"
         className="inline-flex items-center gap-1 text-[#FF2200] hover:underline uppercase tracking-widest text-[11px]"
       >
-        Find a BoxNow Locker \u2192
+        Find a BoxNow Locker →
       </a>
     </div>
   );
@@ -75,7 +75,7 @@ function CheckoutForm({ cart }) {
 
   if (success) return (
     <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
-      <span className="font-display text-[80px] text-[#FF2200] leading-none">\u2713</span>
+      <span className="font-display text-[80px] text-[#FF2200] leading-none">✓</span>
       <h2 className="font-display text-4xl text-[#F0EDE8]">{t('checkout.confirmed')}</h2>
       <p className="font-mono text-xs text-[#F0EDE8]/50 max-w-sm">{t('checkout.confirmedNote')}</p>
       {deliveryMethod === 'boxnow' && (
@@ -103,7 +103,7 @@ function CheckoutForm({ cart }) {
           <div className="flex flex-col gap-2">
             {[['courier', t('checkout.homeDelivery')], ['boxnow', t('checkout.boxnowDelivery')]].map(([value, label]) => (
               <button key={value} type="button" onClick={() => setDeliveryMethod(value)} className={`font-mono text-xs text-left px-4 py-3 border transition-colors ${deliveryMethod === value ? 'border-[#FF2200] text-[#F0EDE8]' : 'border-[#333] text-[#F0EDE8]/50'}`}>
-                <span className={`mr-3 ${deliveryMethod === value ? 'text-[#FF2200]' : 'text-[#333]'}`}>\u25cf</span>{label}
+                {label}
               </button>
             ))}
           </div>
@@ -128,13 +128,13 @@ function CheckoutForm({ cart }) {
           <div className="border border-[#1a1a1a]">
             {cart.map((item, i) => (
               <div key={i} className="flex justify-between items-center px-4 py-3 border-b border-[#1a1a1a] last:border-b-0">
-                <div><span className="font-mono text-xs text-[#F0EDE8]/70">{item.name}</span><br/><span className="font-mono text-[11px] text-[#F0EDE8]/30">{item.size} \u00d7 {item.qty}</span></div>
-                <span className="font-mono text-xs text-[#F0EDE8]/60">\u20ac{(item.price * item.qty).toFixed(2)}</span>
+                <div><span className="font-mono text-xs text-[#F0EDE8]/70">{item.name}</span><br/><span className="font-mono text-[11px] text-[#F0EDE8]/30">{item.size} × {item.qty}</span></div>
+                <span className="font-mono text-xs text-[#F0EDE8]/60">€{(item.price * item.qty).toFixed(2)}</span>
               </div>
             ))}
             <div className="flex justify-between items-center px-4 py-4 bg-[#111]">
               <span className="font-mono text-xs uppercase tracking-widest text-[#F0EDE8]/40">{t('checkout.total')}</span>
-              <span className="font-mono text-lg text-[#F0EDE8]">\u20ac{total.toFixed(2)}</span>
+              <span className="font-mono text-lg text-[#F0EDE8]">€{total.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@ function CheckoutForm({ cart }) {
 
         {error && <p className="font-mono text-xs text-[#FF2200]">{error}</p>}
         <button type="submit" disabled={processing || !stripe} className="w-full font-mono text-xs uppercase tracking-widest bg-[#F0EDE8] text-[#080808] py-4 hover:bg-[#FF2200] transition-colors duration-200 disabled:opacity-40">
-          {processing ? t('checkout.processing') : `${t('checkout.pay')} \u20ac${total.toFixed(2)}`}
+          {processing ? t('checkout.processing') : `${t('checkout.pay')} €${total.toFixed(2)}`}
         </button>
       </div>
     </form>
