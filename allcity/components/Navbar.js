@@ -45,7 +45,7 @@ export default function Navbar() {
       )}
 
       <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm">
-        <div className="px-6 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
+        <div className="relative px-6 h-20 flex items-center justify-between">
 
           <div className="flex items-center">
             <div className="hidden md:flex items-center gap-8">
@@ -72,21 +72,21 @@ export default function Navbar() {
             </button>
           </div>
 
-          <div className="flex items-center justify-center">
-            <Link href="/" className="hover:opacity-80 transition-opacity leading-none">
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center">
+            <Link href="/" className="hover:opacity-80 transition-opacity leading-none block">
               <Image
                 src="/logo.png"
                 alt="AllCity"
                 width={1467}
                 height={1323}
                 className="object-contain"
-                style={{ height: '56px', width: 'auto' }}
+                style={{ height: '48px', width: 'auto' }}
                 priority
               />
             </Link>
           </div>
 
-          <div className="flex items-center justify-end gap-3">
+          <div className="flex items-center gap-3">
             <LanguageToggle />
             <Link href="/products" aria-label="Search" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
