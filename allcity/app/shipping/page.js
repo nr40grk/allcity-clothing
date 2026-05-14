@@ -46,7 +46,7 @@ export default function ShippingPage() {
         <section className="border-t border-[#1a1a1a] pt-10">
           <h2 className="font-display text-2xl text-[#FF2200] tracking-widest mb-4">{t('shipping.contactTitle')}</h2>
           <div className="font-mono text-xs text-[#F0EDE8]/50 flex flex-col gap-2">
-            <a href="mailto:allcity.clothing@gmail.com" className="hover:text-[#FF2200] transition-colors">allcity.clothing@gmail.com</a>
+            <a href="mailto:allcityclo@gmail.com" className="hover:text-[#FF2200] transition-colors">allcityclo@gmail.com</a>
             <a href="https://www.instagram.com/allcity_clothing" target="_blank" rel="noreferrer" className="hover:text-[#FF2200] transition-colors">@allcity_clothing</a>
             <p className="text-[#F0EDE8]/30 mt-1">{t('shipping.findUs')}</p>
           </div>

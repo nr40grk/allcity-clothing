@@ -2,6 +2,7 @@ const FILENAME = 'allcity-settings.json';
 export const DEFAULT_SETTINGS = {
   announcement: { active: false, textEN: 'FREE SHIPPING ON ORDERS OVER €80', textGR: 'ΔΩΡΕΑΝ ΑΠΟΣΤΟΛΗ ΓΙΑ ΠΑΡΑΓΓΕΛΙΕΣ ΑΝΩ ΤΩΝ €80', color: 'red' },
   banner: { active: false, titleEN: 'NEW DROP', titleGR: 'ΝΕΑ ΣΥΛΛΟΓΗ', subtitleEN: 'SS25 Collection — Available Now', subtitleGR: 'Συλλογή ΑΧ25 — Τώρα Διαθέσιμη', ctaTextEN: 'Shop Now', ctaTextGR: 'Αγόρασε Τώρα', ctaLink: '/products', image: '' },
+  clothingTypes: ['jackets', 'hoodies', 'tees', 'pants', 'accessories'],
 };
 export async function getSettings() {
   try {
@@ -13,7 +14,7 @@ export async function getSettings() {
     const res = await fetch(sorted[0].url + '?t=' + Date.now());
     if (!res.ok) return DEFAULT_SETTINGS;
     const data = await res.json();
-    return { announcement: { ...DEFAULT_SETTINGS.announcement, ...data.announcement }, banner: { ...DEFAULT_SETTINGS.banner, ...data.banner } };
+    return { announcement: { ...DEFAULT_SETTINGS.announcement, ...data.announcement }, banner: { ...DEFAULT_SETTINGS.banner, ...data.banner }, clothingTypes: data.clothingTypes ?? DEFAULT_SETTINGS.clothingTypes };
   } catch { return DEFAULT_SETTINGS; }
 }
 export async function saveSettings(settings) {

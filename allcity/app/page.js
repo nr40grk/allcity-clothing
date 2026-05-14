@@ -163,7 +163,7 @@ export default function HomePage() {
             <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/20 mt-8 leading-relaxed">
               Athens, GR<br />
               @allcity_clothing<br />
-              @nr40_ath
+              allcityclo@gmail.com
             </p>
           </div>
 

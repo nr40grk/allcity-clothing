@@ -1,29 +1,9 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useT, useLanguage } from './LanguageProvider';
 import LanguageToggle from './LanguageToggle';
-
-// Logo as inline SVG — fixed pixel dimensions to prevent overflow
-function AllCityLogo() {
-  return (
-    <svg
-      width="80"
-      height="28"
-      viewBox="0 0 220 108"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ display: 'block', flexShrink: 0 }}
-    >
-      <rect x="0" y="4" width="100" height="100" fill="#FF2200"/>
-      <path d="M28 52 L32 44 L38 40 L46 38 L54 36 L62 40 L68 38 L74 42 L72 50 L76 56 L72 64 L66 68 L60 72 L52 74 L44 72 L36 68 L30 62 L28 52Z" fill="#080808"/>
-      <path d="M46 38 L50 32 L56 30 L60 34 L64 36 L62 40Z" fill="#080808"/>
-      <path d="M68 38 L72 34 L76 36 L78 42 L74 42Z" fill="#080808"/>
-      <text x="108" y="60" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="44" fill="#F0EDE8" letterSpacing="-1">ALL</text>
-      <text x="108" y="102" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="44" fill="#F0EDE8" letterSpacing="-1">CITY</text>
-    </svg>
-  );
-}
 
 const COLORS = {
   red: { bg: '#FF2200', text: '#080808' },
@@ -46,9 +26,15 @@ export default function Navbar() {
 
   const annColors = announcement ? (COLORS[announcement.color] || COLORS.red) : null;
 
+  const navLinks = [
+    ['/', 'nav.home'],
+    ['/products', 'nav.products'],
+    ['/about', 'nav.about'],
+    ['/shipping', 'nav.shipping'],
+  ];
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
-      {/* Announcement bar */}
       {announcement && (
         <div
           style={{ background: annColors.bg, color: annColors.text }}
@@ -58,14 +44,12 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Navbar */}
       <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center">
 
-          {/* Left — nav links, flex-1 so they take equal space */}
           <div className="flex-1 flex items-center">
             <div className="hidden md:flex items-center gap-8">
-              {[['/', 'nav.home'], ['/products', 'nav.products'], ['/shipping', 'nav.shipping']].map(([href, key]) => (
+              {navLinks.map(([href, key]) => (
                 <Link
                   key={href}
                   href={href}
@@ -75,7 +59,6 @@ export default function Navbar() {
                 </Link>
               ))}
             </div>
-            {/* Mobile burger */}
             <button
               className="flex md:hidden text-[#F0EDE8]/60 hover:text-[#F0EDE8]"
               onClick={() => setMenuOpen(!menuOpen)}
@@ -89,14 +72,20 @@ export default function Navbar() {
             </button>
           </div>
 
-          {/* Center — logo, no absolute positioning */}
           <div className="flex items-center justify-center px-4">
             <Link href="/" className="hover:opacity-80 transition-opacity leading-none">
-              <AllCityLogo />
+              <Image
+                src="/logo.png"
+                alt="AllCity"
+                width={120}
+                height={42}
+                className="object-contain"
+                style={{ height: '42px', width: 'auto' }}
+                priority
+              />
             </Link>
           </div>
 
-          {/* Right — actions, flex-1 justify-end */}
           <div className="flex-1 flex items-center justify-end gap-3">
             <LanguageToggle />
             <Link href="/products" aria-label="Search" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
@@ -114,10 +103,9 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden bg-[#080808] border-t border-[#1a1a1a] px-6 py-6 flex flex-col gap-6">
-            {[['/', 'nav.home'], ['/products', 'nav.products'], ['/shipping', 'nav.shipping']].map(([href, key]) => (
+            {navLinks.map(([href, key]) => (
               <Link
                 key={href}
                 href={href}

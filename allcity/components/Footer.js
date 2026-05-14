@@ -59,8 +59,8 @@ export default function Footer() {
         <div className="max-w-[1400px] mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex flex-col gap-1">
             <p className="font-mono text-[11px] text-[#F0EDE8]/40 uppercase tracking-widest">{t('footer.storeLocation')}</p>
-            <a href="https://maps.google.com/?q=nr40+athens" target="_blank" rel="noreferrer" className="font-mono text-xs text-[#F0EDE8]/70 hover:text-[#FF2200] transition-colors">{t('footer.findUs')}</a>
-            <a href="mailto:allcity.clothing@gmail.com" className="font-mono text-xs text-[#F0EDE8]/70 hover:text-[#FF2200] transition-colors">allcity.clothing@gmail.com</a>
+            <a href="https://www.instagram.com/allcity_clothing" target="_blank" rel="noreferrer" className="font-mono text-xs text-[#F0EDE8]/70 hover:text-[#FF2200] transition-colors">@allcity_clothing</a>
+            <a href="mailto:allcityclo@gmail.com" className="font-mono text-xs text-[#F0EDE8]/70 hover:text-[#FF2200] transition-colors">allcityclo@gmail.com</a>
           </div>
           <div className="flex items-center gap-6">
             <a href="https://www.instagram.com/allcity_clothing" target="_blank" rel="noreferrer" className="font-mono text-xs uppercase tracking-widest text-[#F0EDE8]/50 hover:text-[#FF2200] transition-colors">Instagram</a>

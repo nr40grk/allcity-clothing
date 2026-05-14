@@ -3,7 +3,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const translations = {
   en: {
-    nav: { home: 'Home', products: 'Products', shipping: 'Shipping & Payment' },
+    nav: { home: 'Home', products: 'Products', about: 'About', shipping: 'Shipping & Payment' },
     home: {
       collection: 'SS25 Collection', location: 'Athens, GR',
       tagline: 'Apparel born in the streets. No rules. No limits. Hood Controlling. F*ck the Game. Allcity Clothing.',
@@ -28,7 +28,7 @@ const translations = {
       returnsTitle: 'Returns & Refunds', noReturns: 'NO RETURNS', noRefunds: 'NO REFUNDS',
       returnsNote: '* If your order arrives damaged or not as described, contact us immediately.',
       paymentTitle: 'Payment', paymentBody: 'We accept all major credit and debit cards, Apple Pay, and Google Pay — processed securely via Stripe.',
-      contactTitle: 'Contact', findUs: 'Find us at @nr40_ath — Athens, GR',
+      contactTitle: 'Contact', findUs: 'Find us at @allcity_clothing — Athens, GR',
     },
     checkout: {
       title: 'Checkout', contact: 'Contact', fullName: 'Full name', email: 'Email',
@@ -41,10 +41,10 @@ const translations = {
       stripeNote: 'Secured by Stripe. We never store card data.', pay: 'Pay', processing: 'Processing...',
       confirmed: 'Order Confirmed', confirmedNote: 'Thank you for your order. We will ship within 2 business days.',
     },
-    footer: { subscribe: 'Subscribe to our emails', emailPlaceholder: 'Email', storeLocation: 'Store Location', findUs: 'Find us at @nr40_ath, Athens' },
+    footer: { subscribe: 'Subscribe to our emails', emailPlaceholder: 'Email', storeLocation: 'Contact', findUs: '@allcity_clothing — Athens, GR' },
   },
   el: {
-    nav: { home: 'Αρχική', products: 'Προϊόντα', shipping: 'Αποστολή & Πληρωμή' },
+    nav: { home: 'Αρχική', products: 'Προϊόντα', about: 'Σχετικά', shipping: 'Αποστολή & Πληρωμή' },
     home: {
       collection: 'Συλλογή ΑΧ25', location: 'Αθήνα, GR',
       tagline: 'Ρούχα γεννημένα στους δρόμους. Χωρίς κανόνες. Χωρίς όρια. Hood Controlling. F*ck the Game. Allcity Clothing.',
@@ -69,7 +69,7 @@ const translations = {
       returnsTitle: 'Επιστροφές & Επιστροφή Χρημάτων', noReturns: 'ΧΩΡ. ΕΠΙΣΤΡΟΦΩΝ', noRefunds: 'ΧΩΡ. ΕΠΙΣΤΡΟΦΗΣ ΧΡΗΜΑΤΩΝ',
       returnsNote: '* Αν η παραγγελία σου φτάσει κατεστραμμένη, επικοινώνησε μαζί μας άμεσα.',
       paymentTitle: 'Πληρωμή', paymentBody: 'Δεχόμαστε όλες τις μεγάλες κάρτες, Apple Pay και Google Pay — μέσω Stripe.',
-      contactTitle: 'Επικοινωνία', findUs: 'Βρες μας στο @nr40_ath — Αθήνα, GR',
+      contactTitle: 'Επικοινωνία', findUs: 'Βρες μας στο @allcity_clothing — Αθήνα, GR',
     },
     checkout: {
       title: 'Ολοκλήρωση Αγοράς', contact: 'Στοιχεία Επικοινωνίας', fullName: 'Ονοματεπώνυμο',
@@ -82,7 +82,7 @@ const translations = {
       stripeNote: 'Ασφαλής πληρωμή μέσω Stripe.', pay: 'Πληρωμή', processing: 'Επεξεργασία...',
       confirmed: 'Η Παραγγελία Επιβεβαιώθηκε', confirmedNote: 'Ευχαριστούμε. Θα αποσταλεί εντός 2 εργάσιμων ημερών.',
     },
-    footer: { subscribe: 'Εγγραφή στο newsletter', emailPlaceholder: 'Email', storeLocation: 'Τοποθεσία Καταστήματος', findUs: 'Βρες μας στο @nr40_ath, Αθήνα' },
+    footer: { subscribe: 'Εγγραφή στο newsletter', emailPlaceholder: 'Email', storeLocation: 'Επικοινωνία', findUs: '@allcity_clothing — Αθήνα, GR' },
   },
 };
 

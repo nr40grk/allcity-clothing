@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const SIZES_OPTIONS = ['XS','S','M','L','XL','XXL','ONE SIZE'];
-const CATEGORIES = ['jackets','hoodies','tees','pants','accessories'];
-const EMPTY_FORM = { name:'', price:'', salePrice:'', stock:'', category:'jackets', available:true, isNew:false, image:'', sizes:['S','M','L','XL'], description:'', details:'' };
+const DEFAULT_CATEGORIES = ['jackets','hoodies','tees','pants','accessories'];
+const EMPTY_FORM = { name:'', price:'', salePrice:'', stock:'', category:'jackets', available:true, isNew:false, image:'', images:[], sizes:['S','M','L','XL'], description:'', details:'' };
 const bool = v => v === true || v === 'true';
 
 function Toggle({ on, onClick }) {
@@ -27,8 +27,15 @@ export default function AdminProducts() {
   const [showForm, setShowForm] = useState(false);
   const [msg, setMsg] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [uploadingExtra, setUploadingExtra] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef(null);
+  const extraFileInputRef = useRef(null);
+
+  // Filter category management
+  const [clothingTypes, setClothingTypes] = useState(DEFAULT_CATEGORIES);
+  const [newType, setNewType] = useState('');
+  const [savingTypes, setSavingTypes] = useState(false);
 
   useEffect(() => {
     const t = sessionStorage.getItem('admin_token');
@@ -42,40 +49,54 @@ export default function AdminProducts() {
     const res = await fetch('/api/admin', { headers: { 'x-admin-token': token } });
     if (res.status === 401) { router.push('/admin'); return; }
     const data = await res.json();
-    setProducts(data.map(p => ({ ...p, available: bool(p.available), isNew: bool(p.isNew) })));
+    setProducts(data.map(p => ({ ...p, available: bool(p.available), isNew: bool(p.isNew), images: p.images || [] })));
     setLoading(false);
   }, [token, router]);
 
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
 
+  useEffect(() => {
+    fetch('/api/settings').then(r => r.json()).then(data => {
+      if (data?.clothingTypes) setClothingTypes(data.clothingTypes);
+    }).catch(() => {});
+  }, []);
+
   function flash(text) { setMsg(text); setTimeout(() => setMsg(''), 3000); }
 
-  async function uploadImage(file) {
+  async function uploadImage(file, isExtra = false) {
     if (!file || !file.type.startsWith('image/')) { flash('Please upload an image file.'); return; }
-    setUploading(true);
+    if (isExtra) setUploadingExtra(true); else setUploading(true);
     try {
       const fd = new FormData(); fd.append('file', file);
       const res = await fetch('/api/upload', { method:'POST', headers:{ 'x-admin-token': token }, body: fd });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
-      setForm(prev => ({ ...prev, image: data.url })); flash('Image uploaded.');
-    } catch (e) { flash('Upload failed: ' + e.message); } finally { setUploading(false); }
+      if (isExtra) {
+        setForm(prev => ({ ...prev, images: [...(prev.images || []), data.url] }));
+        flash('Extra image uploaded.');
+      } else {
+        setForm(prev => ({ ...prev, image: data.url }));
+        flash('Image uploaded.');
+      }
+    } catch (e) { flash('Upload failed: ' + e.message); }
+    finally { if (isExtra) setUploadingExtra(false); else setUploading(false); }
   }
 
   function handleDrop(e) { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) uploadImage(f); }
 
   function startEdit(product) {
-    setForm({ ...product, available: bool(product.available), isNew: bool(product.isNew), salePrice: product.salePrice || '', stock: product.stock != null ? String(product.stock) : '', details: Array.isArray(product.details) ? product.details.join('\n') : (product.details || '') });
+    setForm({ ...product, available: bool(product.available), isNew: bool(product.isNew), salePrice: product.salePrice || '', stock: product.stock != null ? String(product.stock) : '', details: Array.isArray(product.details) ? product.details.join('\n') : (product.details || ''), images: product.images || [] });
     setEditingId(product.id); setShowForm(true); window.scrollTo({ top:0, behavior:'smooth' });
   }
 
   function resetForm() { setForm(EMPTY_FORM); setEditingId(null); setShowForm(false); }
   function toggleSize(size) { setForm(prev => ({ ...prev, sizes: prev.sizes.includes(size) ? prev.sizes.filter(s => s !== size) : [...prev.sizes, size] })); }
+  function removeExtraImage(url) { setForm(prev => ({ ...prev, images: prev.images.filter(u => u !== url) })); }
 
   async function handleSave(e) {
     e.preventDefault();
     if (!form.image) { flash('Please upload a product image.'); return; }
-    const payload = { ...form, available: bool(form.available), isNew: bool(form.isNew), price: parseFloat(form.price), salePrice: form.salePrice ? parseFloat(form.salePrice) : null, stock: form.stock !== '' ? parseInt(form.stock) : null, details: form.details.split('\n').map(d => d.trim()).filter(Boolean) };
+    const payload = { ...form, available: bool(form.available), isNew: bool(form.isNew), price: parseFloat(form.price), salePrice: form.salePrice ? parseFloat(form.salePrice) : null, stock: form.stock !== '' ? parseInt(form.stock) : null, details: form.details.split('\n').map(d => d.trim()).filter(Boolean), images: form.images || [] };
     if (editingId) payload.id = editingId;
     const res = await fetch('/api/admin', { method: editingId ? 'PUT' : 'POST', headers: { 'Content-Type':'application/json', 'x-admin-token': token }, body: JSON.stringify(payload) });
     if (!res.ok) { flash('Error saving product.'); return; }
@@ -97,6 +118,24 @@ export default function AdminProducts() {
     await fetch('/api/admin', { method:'PUT', headers:{ 'Content-Type':'application/json', 'x-admin-token': token }, body: JSON.stringify({ ...product, available: newVal }) });
   }
 
+  async function saveClothingTypes() {
+    setSavingTypes(true);
+    try {
+      const settingsRes = await fetch('/api/settings');
+      const settings = await settingsRes.json();
+      await fetch('/api/settings', { method:'PUT', headers:{ 'Content-Type':'application/json', 'x-admin-token': token }, body: JSON.stringify({ ...settings, clothingTypes }) });
+      flash('Filter categories saved.');
+    } catch { flash('Failed to save categories.'); }
+    setSavingTypes(false);
+  }
+
+  function addType() {
+    const t = newType.trim().toLowerCase();
+    if (!t || clothingTypes.includes(t)) return;
+    setClothingTypes(prev => [...prev, t]);
+    setNewType('');
+  }
+
   const isAvailable = bool(form.available);
   const isNew = bool(form.isNew);
 
@@ -109,9 +148,10 @@ export default function AdminProducts() {
             <p className="font-mono text-[11px] text-[#F0EDE8]/30 uppercase tracking-widest mt-1">Products</p>
           </div>
           <div className="flex gap-3">
+            <Link href="/admin/sales" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Sales</Link>
             <Link href="/admin/settings" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Settings</Link>
             <Link href="/admin/emails" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Emails</Link>
-            <a href="/" target="_blank" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#F0EDE8]/30 transition-colors">View Site ↗</a>
+            <a href="/" target="_blank" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#F0EDE8]/30 transition-colors">View Site \u2197</a>
             <button onClick={() => { setShowForm(!showForm); setEditingId(null); setForm(EMPTY_FORM); }} className="font-mono text-xs uppercase tracking-widest bg-[#FF2200] text-[#080808] px-4 py-2 hover:bg-[#F0EDE8] transition-colors">
               {showForm ? 'Cancel' : '+ New Product'}
             </button>
@@ -120,9 +160,37 @@ export default function AdminProducts() {
 
         {msg && <div className="mb-6 font-mono text-xs text-[#F0EDE8]/70 border border-[#333] px-4 py-3">{msg}</div>}
 
+        {/* Filter Category Management */}
+        <div className="border border-[#1a1a1a] p-6 mb-10 bg-[#0d0d0d]">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-[#FF2200] mb-4">Filter Categories (Clothing Types)</p>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {clothingTypes.map(type => (
+              <span key={type} className="flex items-center gap-1 font-mono text-xs border border-[#333] px-3 py-1 text-[#F0EDE8]/60">
+                {type}
+                <button onClick={() => setClothingTypes(prev => prev.filter(t => t !== type))} className="ml-1 text-[#F0EDE8]/30 hover:text-[#FF2200] transition-colors">\u00d7</button>
+              </span>
+            ))}
+          </div>
+          <div className="flex gap-2">
+            <input
+              value={newType}
+              onChange={e => setNewType(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addType())}
+              placeholder="Add new category..."
+              className="input flex-1"
+            />
+            <button type="button" onClick={addType} className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/40 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Add</button>
+            <button type="button" onClick={saveClothingTypes} disabled={savingTypes} className="font-mono text-xs uppercase tracking-widest bg-[#F0EDE8] text-[#080808] px-4 py-2 hover:bg-[#FF2200] transition-colors disabled:opacity-40">
+              {savingTypes ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+        </div>
+
         {showForm && (
           <form onSubmit={handleSave} className="border border-[#1a1a1a] p-6 mb-10 flex flex-col gap-5 bg-[#0d0d0d]">
             <p className="font-mono text-[11px] uppercase tracking-widest text-[#FF2200]">{editingId ? 'Edit Product' : 'New Product'}</p>
+
+            {/* Primary image */}
             <div>
               <label className="label">Product Image *</label>
               <div onDrop={handleDrop} onDragOver={e => { e.preventDefault(); setDragOver(true); }} onDragLeave={() => setDragOver(false)} onClick={() => !uploading && fileInputRef.current?.click()}
@@ -148,15 +216,51 @@ export default function AdminProducts() {
               </div>
               <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={e => { if (e.target.files[0]) uploadImage(e.target.files[0]); e.target.value=''; }} />
             </div>
+
+            {/* Extra images */}
+            <div>
+              <label className="label">Extra Images (hover photos)</label>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {(form.images || []).map((url, i) => (
+                  <div key={url} className="relative group">
+                    <img src={url} alt={`extra ${i+1}`} className="h-20 w-20 object-cover border border-[#333]" />
+                    <button type="button" onClick={() => removeExtraImage(url)} className="absolute top-0 right-0 bg-[#FF2200] text-[#080808] text-[10px] w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">\u00d7</button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => !uploadingExtra && extraFileInputRef.current?.click()}
+                  className="h-20 w-20 border border-dashed border-[#333] flex flex-col items-center justify-center gap-1 hover:border-[#FF2200] transition-colors cursor-pointer"
+                  disabled={uploadingExtra}
+                >
+                  {uploadingExtra ? (
+                    <div className="w-4 h-4 border border-[#FF2200] border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span className="text-[#F0EDE8]/30 text-xl leading-none">+</span>
+                      <span className="font-mono text-[9px] text-[#F0EDE8]/20 uppercase">Add</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <input ref={extraFileInputRef} type="file" accept="image/*" className="hidden" onChange={e => { if (e.target.files[0]) uploadImage(e.target.files[0], true); e.target.value=''; }} />
+              <p className="font-mono text-[10px] text-[#F0EDE8]/20">These appear on hover in the product grid.</p>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2"><label className="label">Product Name *</label><input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="input w-full" placeholder="ALLCITY CORE JACKET" /></div>
-              <div><label className="label">Original Price (€) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="input w-full" placeholder="120" /></div>
-              <div><label className="label">Sale Price (€) — optional</label><input type="number" step="0.01" min="0" value={form.salePrice} onChange={e => setForm({...form, salePrice: e.target.value})} className="input w-full" placeholder="90" /></div>
+              <div><label className="label">Original Price (\u20ac) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="input w-full" placeholder="120" /></div>
+              <div><label className="label">Sale Price (\u20ac) \u2014 optional</label><input type="number" step="0.01" min="0" value={form.salePrice} onChange={e => setForm({...form, salePrice: e.target.value})} className="input w-full" placeholder="90" /></div>
               <div><label className="label">Stock Quantity</label><input type="number" min="0" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})} className="input w-full" placeholder="0" /></div>
-              <div><label className="label">Category</label><select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className="input w-full">{CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}</select></div>
+              <div><label className="label">Category</label>
+                <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className="input w-full">
+                  {clothingTypes.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
               <div className="col-span-2"><label className="label">Description</label><input value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="input w-full" placeholder="Short product description" /></div>
               <div className="col-span-2"><label className="label">Details (one per line)</label><textarea value={form.details} onChange={e => setForm({...form, details: e.target.value})} className="input w-full h-24 resize-none" placeholder={"100% Nylon shell\nWaterproof coating"} /></div>
             </div>
+
             <div>
               <label className="label">Sizes</label>
               <div className="flex flex-wrap gap-2 mt-2">
@@ -167,10 +271,12 @@ export default function AdminProducts() {
                 ))}
               </div>
             </div>
+
             <div className="grid grid-cols-2 gap-6">
               <div><label className="label">Availability</label><div className="flex items-center gap-3 mt-2"><Toggle on={isAvailable} onClick={() => setForm(prev => ({...prev, available: !bool(prev.available)}))} /><span style={{ color: isAvailable ? '#FF2200' : 'rgba(240,237,232,0.3)' }} className="font-mono text-xs">{isAvailable ? 'Available' : 'Sold Out'}</span></div></div>
               <div><label className="label">New Release Badge</label><div className="flex items-center gap-3 mt-2"><Toggle on={isNew} onClick={() => setForm(prev => ({...prev, isNew: !bool(prev.isNew)}))} /><span style={{ color: isNew ? '#FF2200' : 'rgba(240,237,232,0.3)' }} className="font-mono text-xs">{isNew ? 'Shows NEW badge' : 'No badge'}</span></div></div>
             </div>
+
             <div className="flex gap-3 pt-2 border-t border-[#1a1a1a]">
               <button type="submit" className="font-mono text-xs uppercase tracking-widest bg-[#F0EDE8] text-[#080808] px-6 py-3 hover:bg-[#FF2200] transition-colors">{editingId ? 'Save Changes' : 'Create Product'}</button>
               <button type="button" onClick={resetForm} className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/40 px-6 py-3 hover:border-[#F0EDE8]/30 transition-colors">Cancel</button>
@@ -194,11 +300,12 @@ export default function AdminProducts() {
                   <div className="flex-1 min-w-0">
                     <p className="font-mono text-xs text-[#F0EDE8]/80 truncate">{product.name}</p>
                     <div className="flex items-center gap-2">
-                      {onSale ? <><span className="font-mono text-[11px] text-[#FF2200]">€{product.salePrice}</span><span className="font-mono text-[11px] text-[#F0EDE8]/20 line-through">€{product.price}</span></> : <span className="font-mono text-[11px] text-[#F0EDE8]/30">€{product.price}</span>}
-                      <span className="font-mono text-[11px] text-[#F0EDE8]/20">· {product.category}</span>
+                      {onSale ? <><span className="font-mono text-[11px] text-[#FF2200]">\u20ac{product.salePrice}</span><span className="font-mono text-[11px] text-[#F0EDE8]/20 line-through">\u20ac{product.price}</span></> : <span className="font-mono text-[11px] text-[#F0EDE8]/30">\u20ac{product.price}</span>}
+                      <span className="font-mono text-[11px] text-[#F0EDE8]/20">\u00b7 {product.category}</span>
+                      {product.images?.length > 0 && <span className="font-mono text-[11px] text-[#F0EDE8]/20">\u00b7 {product.images.length} extra photo{product.images.length > 1 ? 's' : ''}</span>}
                       {product.stock != null && (
                         <span style={{ color: product.stock === 0 ? '#FF2200' : product.stock <= 5 ? '#FF8800' : 'rgba(240,237,232,0.3)' }} className="font-mono text-[11px]">
-                          · {product.stock === 0 ? 'Out of stock' : `${product.stock} in stock`}
+                          \u00b7 {product.stock === 0 ? 'Out of stock' : `${product.stock} in stock`}
                         </span>
                       )}
                     </div>

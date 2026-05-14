@@ -75,7 +75,7 @@ export function OrderConfirmationEmail({ orderNumber, customerName, items = [], 
               Questions? DM us{' '}
               <Link href="https://instagram.com/allcity_clothing" style={redLink}>@allcity_clothing</Link>
               {' '}or email{' '}
-              <Link href="mailto:allcity.clothing@gmail.com" style={redLink}>allcity.clothing@gmail.com</Link>
+              <Link href="mailto:allcityclo@gmail.com" style={redLink}>allcityclo@gmail.com</Link>
             </Text>
             <Text style={footerText}>ALLCITY Clothing · Athens, GR</Text>
           </Section>
