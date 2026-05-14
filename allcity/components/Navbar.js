@@ -73,7 +73,7 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center justify-center px-4">
-            <Link href="/" className="hover:opacity-80 transition-opacity leading-none">
+            <Link href="/" className="hover:opacity-80 transition-opacity leading-none flex items-center gap-3">
               <Image
                 src="/logo.png"
                 alt="AllCity"
@@ -83,6 +83,9 @@ export default function Navbar() {
                 style={{ height: '58px', width: 'auto' }}
                 priority
               />
+              <span className="font-display text-[#F0EDE8] tracking-tight leading-none hidden sm:block" style={{ fontSize: '22px' }}>
+                ALL<span className="text-[#FF2200]">CITY</span>
+              </span>
             </Link>
           </div>
 
