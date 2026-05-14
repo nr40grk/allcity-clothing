@@ -44,7 +44,7 @@ function CheckoutForm({ cart }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!stripe || !elements) return;
+    if (!stripe || !elements) { setError('Payment not ready — refresh the page or contact us at info@allcityclothing.com'); return; }
     setProcessing(true); setError('');
     try {
       const intentRes = await fetch('/api/create-payment-intent', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: Math.round(total * 100), currency: 'eur' }) });

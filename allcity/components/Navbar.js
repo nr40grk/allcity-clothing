@@ -45,7 +45,7 @@ export default function Navbar() {
       )}
 
       <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm">
-        <div className="max-w-[1400px] mx-auto px-6 h-20 flex items-center">
+        <div className="relative max-w-[1400px] mx-auto px-6 h-20 flex items-center">
 
           <div className="flex-1 flex items-center">
             <div className="hidden md:flex items-center gap-8">
@@ -72,7 +72,7 @@ export default function Navbar() {
             </button>
           </div>
 
-          <div className="flex items-center justify-center px-4">
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center">
             <Link href="/" className="hover:opacity-80 transition-opacity leading-none">
               <Image
                 src="/logo.png"
