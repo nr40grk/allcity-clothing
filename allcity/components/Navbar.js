@@ -45,7 +45,7 @@ export default function Navbar() {
       )}
 
       <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm">
-        <div className="max-w-[1400px] mx-auto px-6 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
+        <div className="px-6 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
 
           <div className="flex items-center">
             <div className="hidden md:flex items-center gap-8">
@@ -80,7 +80,7 @@ export default function Navbar() {
                 width={1467}
                 height={1323}
                 className="object-contain"
-                style={{ height: '72px', width: 'auto' }}
+                style={{ height: '80px', width: 'auto' }}
                 priority
               />
             </Link>
