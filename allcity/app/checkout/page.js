@@ -33,12 +33,14 @@ function CheckoutForm({ cart }) {
   const t = useT();
   const stripe = useStripe();
   const elements = useElements();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', postalCode: '', country: 'GR' });
-  const [deliveryMethod, setDeliveryMethod] = useState('courier');
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', postalCode: '' });
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+  const inputClass = "bg-[#111] border border-[#333] text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20 w-full";
+  const field = (key) => ({ value: form[key], onChange: e => setForm({ ...form, [key]: e.target.value }) });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -51,22 +53,10 @@ function CheckoutForm({ cart }) {
       const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, { payment_method: { card: elements.getElement(CardElement), billing_details: { name: form.name, email: form.email } } });
       if (stripeError) throw new Error(stripeError.message);
 
-      // Save order
       await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          address: form.address,
-          city: form.city,
-          postalCode: form.postalCode,
-          deliveryMethod,
-          boxnowAddress: deliveryMethod === 'boxnow' ? `${form.address}, ${form.city} ${form.postalCode}` : null,
-          items: cart,
-          total,
-        }),
+        body: JSON.stringify({ ...form, deliveryMethod: 'boxnow', boxnowAddress: `${form.address}, ${form.city} ${form.postalCode}`, items: cart, total }),
       });
 
       setSuccess(true);
@@ -78,48 +68,35 @@ function CheckoutForm({ cart }) {
       <span className="font-display text-[80px] text-[#FF2200] leading-none">✓</span>
       <h2 className="font-display text-4xl text-[#F0EDE8]">{t('checkout.confirmed')}</h2>
       <p className="font-mono text-xs text-[#F0EDE8]/50 max-w-sm">{t('checkout.confirmedNote')}</p>
-      {deliveryMethod === 'boxnow' && (
-        <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">
-          We will contact you at {form.email} with your BoxNow locker details.
-        </p>
-      )}
+      <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">We will contact you at {form.email} with your BoxNow locker details.</p>
     </div>
   );
 
   return (
     <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-10 lg:gap-20">
       <div className="flex flex-col gap-8">
+
+        {/* Contact */}
         <fieldset>
           <legend className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.contact')}</legend>
           <div className="flex flex-col gap-3">
-            {[['name', t('checkout.fullName')], ['email', t('checkout.email'), 'email'], ['phone', t('checkout.phone')]].map(([name, placeholder, type='text']) => (
-              <input key={name} name={name} type={type} placeholder={placeholder} value={form[name]} onChange={e => setForm({...form, [name]: e.target.value})} required className="bg-[#111] border border-[#333] text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20 w-full" />
-            ))}
+            <input type="text" placeholder={t('checkout.fullName')} required autoComplete="name" className={inputClass} {...field('name')} />
+            <input type="email" placeholder={t('checkout.email')} required autoComplete="email" className={inputClass} {...field('email')} />
+            <input type="tel" placeholder={t('checkout.phone')} required autoComplete="tel" pattern="[+]?[0-9\s\-()]{7,20}" title="Enter a valid phone number" className={inputClass} {...field('phone')} />
           </div>
         </fieldset>
 
+        {/* Address */}
         <fieldset>
-          <legend className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.deliveryMethod')}</legend>
-          <div className="flex flex-col gap-2">
-            {[['courier', t('checkout.homeDelivery')], ['boxnow', t('checkout.boxnowDelivery')]].map(([value, label]) => (
-              <button key={value} type="button" onClick={() => setDeliveryMethod(value)} className={`font-mono text-xs text-left px-4 py-3 border transition-colors ${deliveryMethod === value ? 'border-[#FF2200] text-[#F0EDE8]' : 'border-[#333] text-[#F0EDE8]/50'}`}>
-                {label}
-              </button>
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">
-            {deliveryMethod === 'boxnow' ? t('checkout.addressForLocker') : t('checkout.shippingAddress')}
-          </legend>
+          <legend className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.addressForLocker')}</legend>
           <div className="flex flex-col gap-3">
-            {[['address', t('checkout.street')], ['city', t('checkout.city')], ['postalCode', t('checkout.postalCode')]].map(([name, placeholder]) => (
-              <input key={name} name={name} type="text" placeholder={placeholder} value={form[name]} onChange={e => setForm({...form, [name]: e.target.value})} required className="bg-[#111] border border-[#333] text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20 w-full" />
-            ))}
+            <input type="text" placeholder={t('checkout.street')} required autoComplete="street-address" className={inputClass} {...field('address')} />
+            <input type="text" placeholder={t('checkout.city')} required autoComplete="address-level2" className={inputClass} {...field('city')} />
+            <input type="text" placeholder={t('checkout.postalCode')} required autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{4,10}" title="Enter a valid postal code" className={inputClass} {...field('postalCode')} />
           </div>
-          {deliveryMethod === 'boxnow' && <BoxNowNote lang="en" />}
+          <BoxNowNote lang="en" />
         </fieldset>
+
       </div>
 
       <div className="flex flex-col gap-8">
@@ -141,7 +118,15 @@ function CheckoutForm({ cart }) {
 
         <div>
           <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.cardDetails')}</p>
-          <div className="border border-[#333] px-4 py-4 focus-within:border-[#FF2200] transition-colors"><CardElement options={CARD_OPTIONS} /></div>
+          {!stripe ? (
+            <div className="border border-[#FF2200]/40 bg-[#FF2200]/5 px-4 py-4 font-mono text-xs text-[#FF2200]/70">
+              Payment not configured — Stripe key missing. Set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in Vercel and redeploy.
+            </div>
+          ) : (
+            <div className="border border-[#333] px-4 py-4 focus-within:border-[#FF2200] transition-colors">
+              <CardElement options={CARD_OPTIONS} />
+            </div>
+          )}
           <p className="font-mono text-[11px] text-[#F0EDE8]/20 mt-2">{t('checkout.stripeNote')}</p>
         </div>
 
