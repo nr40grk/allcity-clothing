@@ -77,8 +77,8 @@ export default function Navbar() {
               <Image
                 src="/logo.png"
                 alt="AllCity"
-                width={200}
-                height={200}
+                width={1467}
+                height={1323}
                 className="object-contain"
                 style={{ height: '72px', width: 'auto' }}
                 priority
