@@ -45,61 +45,67 @@ export default function Navbar() {
       )}
 
       <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm">
-        <div className="relative px-6 h-20 flex items-center justify-between">
+        <div className="relative h-20">
 
-          <div className="flex items-center">
-            <div className="hidden md:flex items-center gap-8">
-              {navLinks.map(([href, key]) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="font-mono text-xs text-[#F0EDE8]/70 uppercase tracking-widest hover:text-[#F0EDE8] transition-colors link-red"
-                >
-                  {t(key)}
-                </Link>
-              ))}
+          {/* Logo — inset-0 overlay so it centers against the full nav width, not the padded content box */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="pointer-events-auto">
+              <Link href="/" className="hover:opacity-80 transition-opacity leading-none block">
+                <Image
+                  src="/logo.png"
+                  alt="AllCity"
+                  width={1467}
+                  height={1323}
+                  className="object-contain"
+                  style={{ height: '48px', width: 'auto' }}
+                  priority
+                />
+              </Link>
             </div>
-            <button
-              className="flex md:hidden text-[#F0EDE8]/60 hover:text-[#F0EDE8]"
-              onClick={() => setMenuOpen(!menuOpen)}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                {menuOpen
-                  ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
-                  : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
-                }
-              </svg>
-            </button>
           </div>
 
-          <div className="absolute left-1/2 -translate-x-1/2 flex items-center">
-            <Link href="/" className="hover:opacity-80 transition-opacity leading-none block">
-              <Image
-                src="/logo.png"
-                alt="AllCity"
-                width={1467}
-                height={1323}
-                className="object-contain"
-                style={{ height: '48px', width: 'auto' }}
-                priority
-              />
-            </Link>
-          </div>
+          {/* Left + Right in front */}
+          <div className="relative h-full px-6 flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="hidden md:flex items-center gap-8">
+                {navLinks.map(([href, key]) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className="font-mono text-xs text-[#F0EDE8]/70 uppercase tracking-widest hover:text-[#F0EDE8] transition-colors link-red"
+                  >
+                    {t(key)}
+                  </Link>
+                ))}
+              </div>
+              <button
+                className="flex md:hidden text-[#F0EDE8]/60 hover:text-[#F0EDE8]"
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  {menuOpen
+                    ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
+                    : <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
+                  }
+                </svg>
+              </button>
+            </div>
 
-          <div className="flex items-center gap-3">
-            <LanguageToggle />
-            <Link href="/products" aria-label="Search" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-              </svg>
-            </Link>
-            <Link href="/checkout" aria-label="Cart" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
-                <line x1="3" y1="6" x2="21" y2="6"/>
-                <path d="M16 10a4 4 0 0 1-8 0"/>
-              </svg>
-            </Link>
+            <div className="flex items-center gap-3">
+              <LanguageToggle />
+              <Link href="/products" aria-label="Search" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+              </Link>
+              <Link href="/checkout" aria-label="Cart" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                  <line x1="3" y1="6" x2="21" y2="6"/>
+                  <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+              </Link>
+            </div>
           </div>
         </div>
 
