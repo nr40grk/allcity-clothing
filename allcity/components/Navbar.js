@@ -80,7 +80,7 @@ export default function Navbar() {
                 width={1467}
                 height={1323}
                 className="object-contain"
-                style={{ height: '80px', width: 'auto' }}
+                style={{ height: '56px', width: 'auto' }}
                 priority
               />
             </Link>
