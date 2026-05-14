@@ -45,9 +45,9 @@ export default function Navbar() {
       )}
 
       <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm">
-        <div className="relative max-w-[1400px] mx-auto px-6 h-20 flex items-center">
+        <div className="max-w-[1400px] mx-auto px-6 h-20 grid grid-cols-[1fr_auto_1fr] items-center">
 
-          <div className="flex-1 flex items-center">
+          <div className="flex items-center">
             <div className="hidden md:flex items-center gap-8">
               {navLinks.map(([href, key]) => (
                 <Link
@@ -72,7 +72,7 @@ export default function Navbar() {
             </button>
           </div>
 
-          <div className="absolute left-1/2 -translate-x-1/2 flex items-center">
+          <div className="flex items-center justify-center">
             <Link href="/" className="hover:opacity-80 transition-opacity leading-none">
               <Image
                 src="/logo.png"
@@ -86,7 +86,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <div className="flex-1 flex items-center justify-end gap-3">
+          <div className="flex items-center justify-end gap-3">
             <LanguageToggle />
             <Link href="/products" aria-label="Search" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
