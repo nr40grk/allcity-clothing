@@ -6,7 +6,7 @@ import { useT, useLanguage } from '@/components/LanguageProvider';
 
 function HeroVideo() {
   const desktop = process.env.NEXT_PUBLIC_HERO_VIDEO_DESKTOP;
-  const mobile = process.env.NEXT_PUBLIC_HERO_VIDEO_MOBILE;
+  const mobile = process.env.NEXT_PUBLIC_HERO_VIDEO_MOBILE || '/videos/mobile-hero.mp4';
   if (!desktop && !mobile) return null;
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden">

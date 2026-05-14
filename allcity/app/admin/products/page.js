@@ -151,7 +151,7 @@ export default function AdminProducts() {
             <Link href="/admin/sales" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Sales</Link>
             <Link href="/admin/settings" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Settings</Link>
             <Link href="/admin/emails" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Emails</Link>
-            <a href="/" target="_blank" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#F0EDE8]/30 transition-colors">View Site \u2197</a>
+            <a href="/" target="_blank" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#F0EDE8]/30 transition-colors">View Site ↗</a>
             <button onClick={() => { setShowForm(!showForm); setEditingId(null); setForm(EMPTY_FORM); }} className="font-mono text-xs uppercase tracking-widest bg-[#FF2200] text-[#080808] px-4 py-2 hover:bg-[#F0EDE8] transition-colors">
               {showForm ? 'Cancel' : '+ New Product'}
             </button>
@@ -167,7 +167,7 @@ export default function AdminProducts() {
             {clothingTypes.map(type => (
               <span key={type} className="flex items-center gap-1 font-mono text-xs border border-[#333] px-3 py-1 text-[#F0EDE8]/60">
                 {type}
-                <button onClick={() => setClothingTypes(prev => prev.filter(t => t !== type))} className="ml-1 text-[#F0EDE8]/30 hover:text-[#FF2200] transition-colors">\u00d7</button>
+                <button onClick={() => setClothingTypes(prev => prev.filter(t => t !== type))} className="ml-1 text-[#F0EDE8]/30 hover:text-[#FF2200] transition-colors">×</button>
               </span>
             ))}
           </div>
@@ -224,7 +224,7 @@ export default function AdminProducts() {
                 {(form.images || []).map((url, i) => (
                   <div key={url} className="relative group">
                     <img src={url} alt={`extra ${i+1}`} className="h-20 w-20 object-cover border border-[#333]" />
-                    <button type="button" onClick={() => removeExtraImage(url)} className="absolute top-0 right-0 bg-[#FF2200] text-[#080808] text-[10px] w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">\u00d7</button>
+                    <button type="button" onClick={() => removeExtraImage(url)} className="absolute top-0 right-0 bg-[#FF2200] text-[#080808] text-[10px] w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
                   </div>
                 ))}
                 <button
@@ -249,8 +249,8 @@ export default function AdminProducts() {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2"><label className="label">Product Name *</label><input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="input w-full" placeholder="ALLCITY CORE JACKET" /></div>
-              <div><label className="label">Original Price (\u20ac) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="input w-full" placeholder="120" /></div>
-              <div><label className="label">Sale Price (\u20ac) \u2014 optional</label><input type="number" step="0.01" min="0" value={form.salePrice} onChange={e => setForm({...form, salePrice: e.target.value})} className="input w-full" placeholder="90" /></div>
+              <div><label className="label">Original Price (€) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="input w-full" placeholder="120" /></div>
+              <div><label className="label">Sale Price (€) — optional</label><input type="number" step="0.01" min="0" value={form.salePrice} onChange={e => setForm({...form, salePrice: e.target.value})} className="input w-full" placeholder="90" /></div>
               <div><label className="label">Stock Quantity</label><input type="number" min="0" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})} className="input w-full" placeholder="0" /></div>
               <div><label className="label">Category</label>
                 <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className="input w-full">
@@ -300,12 +300,12 @@ export default function AdminProducts() {
                   <div className="flex-1 min-w-0">
                     <p className="font-mono text-xs text-[#F0EDE8]/80 truncate">{product.name}</p>
                     <div className="flex items-center gap-2">
-                      {onSale ? <><span className="font-mono text-[11px] text-[#FF2200]">\u20ac{product.salePrice}</span><span className="font-mono text-[11px] text-[#F0EDE8]/20 line-through">\u20ac{product.price}</span></> : <span className="font-mono text-[11px] text-[#F0EDE8]/30">\u20ac{product.price}</span>}
-                      <span className="font-mono text-[11px] text-[#F0EDE8]/20">\u00b7 {product.category}</span>
-                      {product.images?.length > 0 && <span className="font-mono text-[11px] text-[#F0EDE8]/20">\u00b7 {product.images.length} extra photo{product.images.length > 1 ? 's' : ''}</span>}
+                      {onSale ? <><span className="font-mono text-[11px] text-[#FF2200]">€{product.salePrice}</span><span className="font-mono text-[11px] text-[#F0EDE8]/20 line-through">€{product.price}</span></> : <span className="font-mono text-[11px] text-[#F0EDE8]/30">€{product.price}</span>}
+                      <span className="font-mono text-[11px] text-[#F0EDE8]/20">· {product.category}</span>
+                      {product.images?.length > 0 && <span className="font-mono text-[11px] text-[#F0EDE8]/20">· {product.images.length} extra photo{product.images.length > 1 ? 's' : ''}</span>}
                       {product.stock != null && (
                         <span style={{ color: product.stock === 0 ? '#FF2200' : product.stock <= 5 ? '#FF8800' : 'rgba(240,237,232,0.3)' }} className="font-mono text-[11px]">
-                          \u00b7 {product.stock === 0 ? 'Out of stock' : `${product.stock} in stock`}
+                          · {product.stock === 0 ? 'Out of stock' : `${product.stock} in stock`}
                         </span>
                       )}
                     </div>

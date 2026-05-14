@@ -71,6 +71,14 @@ export default function Footer() {
               {['VISA','MC','AMEX','GPAY'].map(c => <span key={c} className="font-mono text-[9px] border border-[#333] px-2 py-1 text-[#F0EDE8]/30">{c}</span>)}
             </div>
             <p className="font-mono text-[11px] text-[#F0EDE8]/20">© {new Date().getFullYear()}, ALLCITY</p>
+            <div style={{ display:'flex', gap:'.35rem', alignItems:'baseline' }}>
+              <span style={{ fontFamily:'"Courier New",Courier,monospace', fontSize:'.5rem', letterSpacing:'.12em', textTransform:'uppercase', color:'#2a2a2a' }}>Developed by</span>
+              <a href="YOUR_LINK_HERE" target="_blank" rel="noopener" style={{ fontFamily:'"Courier New",Courier,monospace', fontSize:'.6rem', fontWeight:500, color:'#3a3a3a', borderBottom:'1px solid transparent', textDecoration:'none', transition:'color .18s, border-color .18s' }}
+                onMouseEnter={e => { e.target.style.color='#c9a84c'; e.target.style.borderColor='#c9a84c'; }}
+                onMouseLeave={e => { e.target.style.color='#3a3a3a'; e.target.style.borderColor='transparent'; }}>
+                Your Name
+              </a>
+            </div>
           </div>
         </div>
       </div>
