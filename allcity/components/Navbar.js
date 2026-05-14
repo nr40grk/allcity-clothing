@@ -44,8 +44,8 @@ export default function Navbar() {
         </div>
       )}
 
-      <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-6 h-14 flex items-center">
+      <nav className="border-b border-[#1a1a1a] bg-[#080808]/95 backdrop-blur-sm">
+        <div className="max-w-[1400px] mx-auto px-6 h-16 flex items-center">
 
           <div className="flex-1 flex items-center">
             <div className="hidden md:flex items-center gap-8">
@@ -77,10 +77,10 @@ export default function Navbar() {
               <Image
                 src="/logo.png"
                 alt="AllCity"
-                width={160}
-                height={56}
+                width={220}
+                height={92}
                 className="object-contain"
-                style={{ height: '52px', width: 'auto' }}
+                style={{ height: '58px', width: 'auto' }}
                 priority
               />
             </Link>

@@ -71,13 +71,20 @@ export default function Footer() {
               {['VISA','MC','AMEX','GPAY'].map(c => <span key={c} className="font-mono text-[9px] border border-[#333] px-2 py-1 text-[#F0EDE8]/30">{c}</span>)}
             </div>
             <p className="font-mono text-[11px] text-[#F0EDE8]/20">© {new Date().getFullYear()}, ALLCITY</p>
-            <div style={{ display:'flex', gap:'.35rem', alignItems:'baseline' }}>
-              <span style={{ fontFamily:'"Courier New",Courier,monospace', fontSize:'.5rem', letterSpacing:'.12em', textTransform:'uppercase', color:'#2a2a2a' }}>Developed by</span>
-              <a href="YOUR_LINK_HERE" target="_blank" rel="noopener" style={{ fontFamily:'"Courier New",Courier,monospace', fontSize:'.6rem', fontWeight:500, color:'#3a3a3a', borderBottom:'1px solid transparent', textDecoration:'none', transition:'color .18s, border-color .18s' }}
-                onMouseEnter={e => { e.target.style.color='#c9a84c'; e.target.style.borderColor='#c9a84c'; }}
-                onMouseLeave={e => { e.target.style.color='#3a3a3a'; e.target.style.borderColor='transparent'; }}>
-                Your Name
-              </a>
+            <div style={{ border:'1px solid #1a1a1a', padding:'10px 14px', fontFamily:'"Courier New",Courier,monospace', backgroundColor:'#0a0a0a', minWidth:'200px' }}>
+              <p style={{ color:'rgba(255,34,0,0.35)', fontSize:'9px', letterSpacing:'.15em', textTransform:'uppercase', margin:'0 0 6px' }}>build.info</p>
+              <div style={{ borderTop:'1px solid #1a1a1a', paddingTop:'8px', display:'flex', flexDirection:'column', gap:'3px' }}>
+                <p style={{ color:'rgba(240,237,232,0.2)', fontSize:'10px', margin:0 }}><span style={{ color:'#FF2200' }}>$</span> whoami</p>
+                <p style={{ margin:0, fontSize:'10px' }}>
+                  <span style={{ color:'rgba(240,237,232,0.2)' }}>&gt; </span>
+                  <a href="https://nik.helpmarq.com/" target="_blank" rel="noopener" style={{ color:'rgba(240,237,232,0.55)', textDecoration:'none', transition:'color .18s', borderBottom:'1px solid transparent' }}
+                    onMouseEnter={e => { e.currentTarget.style.color='#FF2200'; e.currentTarget.style.borderColor='#FF2200'; }}
+                    onMouseLeave={e => { e.currentTarget.style.color='rgba(240,237,232,0.55)'; e.currentTarget.style.borderColor='transparent'; }}>
+                    Nikolas Sapalidis
+                  </a>
+                </p>
+                <p style={{ color:'rgba(240,237,232,0.12)', fontSize:'10px', margin:0 }}>// developer</p>
+              </div>
             </div>
           </div>
         </div>

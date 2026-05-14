@@ -46,7 +46,7 @@ export default function HomePage() {
   return (
     <>
       {/* ── Hero ────────────────────────────────────────────────── */}
-      <section className="relative pt-14 min-h-screen flex flex-col justify-between border-b border-[#1a1a1a]">
+      <section className="relative pt-16 min-h-screen flex flex-col justify-between border-b border-[#1a1a1a]">
         <HeroVideo />
 
         <div className="relative z-10 px-6 pt-12 flex justify-between items-start">

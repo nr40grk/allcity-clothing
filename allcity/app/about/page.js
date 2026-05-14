@@ -6,7 +6,7 @@ export default function AboutPage() {
   const { lang } = useLanguage();
 
   return (
-    <div className="pt-14">
+    <div className="pt-16">
       {/* Header */}
       <div className="px-6 pt-16 pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
         <p className="font-mono text-[11px] uppercase tracking-widest text-[#FF2200]/60 mb-4">
