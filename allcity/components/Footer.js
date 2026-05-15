@@ -1,10 +1,19 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useT } from './LanguageProvider';
+import { useT, useLanguage } from './LanguageProvider';
+
+const LEGAL_LINKS = [
+  { slug: 'imprint', en: 'Legal Notice', el: 'Νομικές Πληροφορίες' },
+  { slug: 'terms', en: 'Terms of Service', el: 'Όροι Χρήσης' },
+  { slug: 'privacy-policy', en: 'Privacy Policy', el: 'Πολιτική Απορρήτου' },
+  { slug: 'cookies', en: 'Cookie Policy', el: 'Πολιτική Cookies' },
+  { slug: 'returns', en: 'Returns & Refunds', el: 'Επιστροφές & Χρήματα' },
+];
 
 export default function Footer() {
   const t = useT();
+  const { lang } = useLanguage();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState(''); // '' | 'loading' | 'success' | 'error' | 'exists'
 
@@ -97,6 +106,22 @@ export default function Footer() {
             <p className="font-mono text-[11px] text-[#F0EDE8]/20">© {new Date().getFullYear()}, ALLCITY</p>
           </div>
 
+        </div>
+
+        {/* Legal links */}
+        <div className="max-w-[1400px] mx-auto mt-10 pt-6 border-t border-[#1a1a1a] flex flex-wrap items-center gap-x-6 gap-y-3">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-[#F0EDE8]/30 mr-2">
+            {lang === 'el' ? 'Νομικά' : 'Legal'}
+          </p>
+          {LEGAL_LINKS.map(({ slug, en, el }) => (
+            <Link
+              key={slug}
+              href={`/legal/${slug}`}
+              className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 hover:text-[#FF2200] transition-colors"
+            >
+              {lang === 'el' ? el : en}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>
