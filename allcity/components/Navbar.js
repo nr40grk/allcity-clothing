@@ -156,7 +156,7 @@ export default function Navbar() {
           style={{ display: 'block', lineHeight: 0, pointerEvents: 'auto' }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="AllCity" style={{ height: '56px', width: 'auto', display: 'block' }} />
+          <img src="/logo.png" alt="AllCity" style={{ height: '64px', width: 'auto', display: 'block' }} />
         </Link>
       </div>
     </>
