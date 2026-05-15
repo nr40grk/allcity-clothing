@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import Image from 'next/image';
+
 import { useState, useEffect } from 'react';
 import { useT, useLanguage } from './LanguageProvider';
 import LanguageToggle from './LanguageToggle';
@@ -51,15 +51,8 @@ export default function Navbar() {
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="pointer-events-auto">
               <Link href="/" className="hover:opacity-80 transition-opacity leading-none block">
-                <Image
-                  src="/logo.png"
-                  alt="AllCity"
-                  width={1467}
-                  height={1323}
-                  className="object-contain"
-                  style={{ height: '48px', width: 'auto' }}
-                  priority
-                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.png" alt="AllCity" style={{ height: '48px', width: 'auto' }} />
               </Link>
             </div>
           </div>
