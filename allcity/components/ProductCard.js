@@ -71,11 +71,11 @@ export default function ProductCard({ product }) {
         <div className="flex flex-col items-end flex-shrink-0">
           {onSale ? (
             <>
-              <span className="font-mono text-xs text-[#FF2200]">\u20ac{Number(product.salePrice).toFixed(2)}</span>
-              <span className="font-mono text-[10px] text-[#F0EDE8]/30 line-through">\u20ac{Number(product.price).toFixed(2)}</span>
+              <span className="font-mono text-xs text-[#FF2200]">€{Number(product.salePrice).toFixed(2)}</span>
+              <span className="font-mono text-[10px] text-[#F0EDE8]/30 line-through">€{Number(product.price).toFixed(2)}</span>
             </>
           ) : (
-            <span className="font-mono text-xs text-[#F0EDE8]/60">\u20ac{Number(product.price).toFixed(2)}</span>
+            <span className="font-mono text-xs text-[#F0EDE8]/60">€{Number(product.price).toFixed(2)}</span>
           )}
         </div>
       </div>

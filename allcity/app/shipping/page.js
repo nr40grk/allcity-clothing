@@ -1,4 +1,5 @@
 'use client';
+import Link from 'next/link';
 import { useT } from '@/components/LanguageProvider';
 export default function ShippingPage() {
   const t = useT();
@@ -29,10 +30,8 @@ export default function ShippingPage() {
         <section>
           <h2 className="font-display text-2xl text-[#FF2200] tracking-widest mb-6">{t('shipping.returnsTitle')}</h2>
           <div className="flex flex-col gap-4 font-mono text-xs text-[#F0EDE8]/60 leading-relaxed">
-            <div className="border border-[#1a1a1a] p-5 flex flex-col gap-3">
-              <div className="flex items-center gap-3"><span className="font-display text-lg text-[#F0EDE8]/30">{t('shipping.noReturns')}</span><span className="w-2 h-2 bg-[#FF2200] rounded-full" /></div>
-              <div className="flex items-center gap-3"><span className="font-display text-lg text-[#F0EDE8]/30">{t('shipping.noRefunds')}</span><span className="w-2 h-2 bg-[#FF2200] rounded-full" /></div>
-            </div>
+            <p>{t('shipping.returnsBody')}</p>
+            <Link href="/legal/returns" className="text-[#FF2200] hover:underline transition-colors">{t('shipping.returnsLink')}</Link>
             <p className="text-[#F0EDE8]/40">{t('shipping.returnsNote')}</p>
           </div>
         </section>
