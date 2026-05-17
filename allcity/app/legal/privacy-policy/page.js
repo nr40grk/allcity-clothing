@@ -7,7 +7,7 @@ export default function PrivacyPolicyPage() {
   return (
     <LegalLayout
       title={lang === 'el' ? 'Πολιτική\nΑπορρήτου' : 'Privacy\nPolicy'}
-      lastUpdated="15 May 2026"
+      lastUpdated="17 May 2026"
     >
       {lang === 'el' ? <EL /> : <EN />}
     </LegalLayout>
@@ -28,8 +28,8 @@ function EN() {
       <h2>1. Data Controller</h2>
       <p>
         The data controller of your personal data is{' '}
-        <strong>[PLACEHOLDER: Legal entity name]</strong>, with registered office at{' '}
-        [PLACEHOLDER: Address, Postal Code, City], Greece, VAT [PLACEHOLDER].
+        <strong>nr40Athens E.E.</strong>, with registered office at{' '}
+        Kanigos 27 &amp; Kapodistria, 10682 Athens, Greece, VAT EL802436040.
         Contact: <a href="mailto:allcityclo@gmail.com">allcityclo@gmail.com</a>.
       </p>
 
@@ -181,8 +181,8 @@ function EL() {
       <h2>1. Υπεύθυνος Επεξεργασίας</h2>
       <p>
         Υπεύθυνος επεξεργασίας των προσωπικών σας δεδομένων είναι η{' '}
-        <strong>[PLACEHOLDER: Επωνυμία]</strong>, με έδρα [PLACEHOLDER: Διεύθυνση, Τ.Κ., Πόλη],
-        Ελλάδα, ΑΦΜ [PLACEHOLDER]. Επικοινωνία:{' '}
+        <strong>nr40Athens Ε.Ε.</strong>, με έδρα ΚΑΝΙΓΓΟΣ 27 &amp; ΚΑΠΟΔΙΣΤΡΙΟΥ, 10682 ΑΘΗΝΑ,
+        Ελλάδα, ΑΦΜ 802436040. Επικοινωνία:{' '}
         <a href="mailto:allcityclo@gmail.com">allcityclo@gmail.com</a>.
       </p>
 

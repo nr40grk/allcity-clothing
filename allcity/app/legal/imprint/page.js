@@ -7,7 +7,7 @@ export default function ImprintPage() {
   return (
     <LegalLayout
       title={lang === 'el' ? 'Νομικές\nΠληροφορίες' : 'Legal\nNotice'}
-      lastUpdated="15 May 2026"
+      lastUpdated="17 May 2026"
     >
       {lang === 'el' ? <EL /> : <EN />}
     </LegalLayout>
@@ -27,11 +27,11 @@ function EN() {
       <table>
         <tbody>
           <tr><th>Trade name</th><td>ALLCITY Clothing</td></tr>
-          <tr><th>Legal entity</th><td>[PLACEHOLDER: Full registered company name, e.g. "Ι. Παπαδόπουλος ΙΚΕ" or sole-proprietorship name]</td></tr>
-          <tr><th>Registered office</th><td>[PLACEHOLDER: Street, Number, Postal Code, City], Greece</td></tr>
-          <tr><th>VAT number (ΑΦΜ)</th><td>[PLACEHOLDER: e.g. EL123456789]</td></tr>
-          <tr><th>Tax authority (ΔΟΥ)</th><td>[PLACEHOLDER: e.g. ΔΟΥ Αθηνών]</td></tr>
-          <tr><th>G.E.MI. number</th><td>[PLACEHOLDER: General Commercial Registry number]</td></tr>
+          <tr><th>Legal entity</th><td>nr40Athens E.E.</td></tr>
+          <tr><th>Registered office</th><td>Kanigos 27 &amp; Kapodistria, 10682 Athens, Greece</td></tr>
+          <tr><th>VAT number (ΑΦΜ)</th><td>EL802436040</td></tr>
+          <tr><th>Tax authority (ΔΟΥ)</th><td>Δ΄ ΑΘΗΝΩΝ</td></tr>
+          <tr><th>G.E.MI. number</th><td>176313103000</td></tr>
           <tr><th>Email</th><td><a href="mailto:allcityclo@gmail.com">allcityclo@gmail.com</a></td></tr>
           <tr><th>Instagram</th><td><a href="https://www.instagram.com/allcity_clothing" target="_blank" rel="noreferrer">@allcity_clothing</a></td></tr>
         </tbody>
@@ -47,7 +47,7 @@ function EN() {
       <h2>Responsible for Content</h2>
       <p>
         Responsible for content within the meaning of Greek and European media law:
-        <strong> [PLACEHOLDER: Full name of legal representative]</strong>, at the registered
+        <strong> Georgios Giannakopoulos</strong>, at the registered
         office stated above.
       </p>
 
@@ -117,11 +117,11 @@ function EL() {
       <table>
         <tbody>
           <tr><th>Διακριτικός τίτλος</th><td>ALLCITY Clothing</td></tr>
-          <tr><th>Επωνυμία</th><td>[PLACEHOLDER: Πλήρης επωνυμία, π.χ. «Ι. Παπαδόπουλος ΙΚΕ»]</td></tr>
-          <tr><th>Έδρα</th><td>[PLACEHOLDER: Οδός, Αριθμός, Τ.Κ., Πόλη], Ελλάδα</td></tr>
-          <tr><th>ΑΦΜ</th><td>[PLACEHOLDER]</td></tr>
-          <tr><th>ΔΟΥ</th><td>[PLACEHOLDER]</td></tr>
-          <tr><th>Αρ. ΓΕΜΗ</th><td>[PLACEHOLDER]</td></tr>
+          <tr><th>Επωνυμία</th><td>nr40Athens Ε.Ε.</td></tr>
+          <tr><th>Έδρα</th><td>ΚΑΝΙΓΓΟΣ 27 &amp; ΚΑΠΟΔΙΣΤΡΙΟΥ, 10682 ΑΘΗΝΑ, Ελλάδα</td></tr>
+          <tr><th>ΑΦΜ</th><td>802436040</td></tr>
+          <tr><th>ΔΟΥ</th><td>Δ΄ ΑΘΗΝΩΝ</td></tr>
+          <tr><th>Αρ. ΓΕΜΗ</th><td>176313103000</td></tr>
           <tr><th>Email</th><td><a href="mailto:allcityclo@gmail.com">allcityclo@gmail.com</a></td></tr>
           <tr><th>Instagram</th><td><a href="https://www.instagram.com/allcity_clothing" target="_blank" rel="noreferrer">@allcity_clothing</a></td></tr>
         </tbody>
@@ -137,7 +137,7 @@ function EL() {
       <h2>Υπεύθυνος Περιεχομένου</h2>
       <p>
         Υπεύθυνος για το περιεχόμενο, κατά την έννοια της ελληνικής και ευρωπαϊκής νομοθεσίας:
-        <strong> [PLACEHOLDER: Ονοματεπώνυμο νόμιμου εκπροσώπου]</strong>, στην ανωτέρω διεύθυνση.
+        <strong> Γιαννακόπουλος Γεώργιος</strong>, στην ανωτέρω διεύθυνση.
       </p>
 
       <h2>Εποπτικές Αρχές</h2>

@@ -7,7 +7,7 @@ export default function TermsPage() {
   return (
     <LegalLayout
       title={lang === 'el' ? 'Όροι\nΧρήσης' : 'Terms of\nService'}
-      lastUpdated="15 May 2026"
+      lastUpdated="17 May 2026"
     >
       {lang === 'el' ? <EL /> : <EN />}
     </LegalLayout>
@@ -21,8 +21,8 @@ function EN() {
         These Terms of Service ("Terms") govern your access to and use of the website
         <a href="https://www.allcityclothing.com"> www.allcityclothing.com</a> ("the Website")
         and any purchase of goods offered through it. The Website is operated by{' '}
-        <strong>[PLACEHOLDER: Legal entity name]</strong>, VAT [PLACEHOLDER], registered at
-        [PLACEHOLDER: Address], Greece ("ALLCITY", "we", "us"). By using the Website or placing
+        <strong>nr40Athens E.E.</strong>, VAT EL802436040, registered at
+        Kanigos 27 &amp; Kapodistria, 10682 Athens, Greece ("ALLCITY", "we", "us"). By using the Website or placing
         an order you agree to these Terms.
       </p>
 
@@ -218,8 +218,8 @@ function EL() {
         Οι παρόντες Όροι Χρήσης («Όροι») διέπουν την πρόσβαση και τη χρήση του ιστοτόπου
         <a href="https://www.allcityclothing.com"> www.allcityclothing.com</a> («ο Ιστότοπος»)
         και κάθε αγορά προϊόντων μέσω αυτού. Ο Ιστότοπος λειτουργεί από την{' '}
-        <strong>[PLACEHOLDER: Επωνυμία]</strong>, ΑΦΜ [PLACEHOLDER], με έδρα [PLACEHOLDER:
-        Διεύθυνση], Ελλάδα («ALLCITY», «εμείς»). Με τη χρήση του Ιστοτόπου ή την υποβολή
+        <strong>nr40Athens Ε.Ε.</strong>, ΑΦΜ 802436040, με έδρα ΚΑΝΙΓΓΟΣ 27 &amp; ΚΑΠΟΔΙΣΤΡΙΟΥ,
+        10682 ΑΘΗΝΑ, Ελλάδα («ALLCITY», «εμείς»). Με τη χρήση του Ιστοτόπου ή την υποβολή
         παραγγελίας αποδέχεστε τους παρόντες Όρους.
       </p>
 
