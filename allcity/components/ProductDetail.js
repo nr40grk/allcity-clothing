@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { useT } from '@/components/LanguageProvider';
+import { addToCart } from '@/lib/cart';
 
 export default function ProductDetail({ product, allProducts = [] }) {
   const t = useT();
@@ -17,6 +18,7 @@ export default function ProductDetail({ product, allProducts = [] }) {
 
   function handleAddToCart() {
     if (!selectedSize) { setAddedMsg(t('product.selectSize')); return; }
+    addToCart(product, selectedSize, qty);
     setAddedMsg(`${t('product.addedToCart')} — ${product.name} / ${selectedSize}`);
     setTimeout(() => setAddedMsg(''), 3000);
   }

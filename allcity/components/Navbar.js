@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useT, useLanguage } from './LanguageProvider';
 import LanguageToggle from './LanguageToggle';
+import { getCart } from '@/lib/cart';
 
 const COLORS = {
   red: { bg: '#FF2200', text: '#080808' },
@@ -13,6 +14,7 @@ const COLORS = {
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [announcement, setAnnouncement] = useState(null);
+  const [cartCount, setCartCount] = useState(0);
   const { lang } = useLanguage();
   const t = useT();
 
@@ -21,6 +23,16 @@ export default function Navbar() {
       .then(r => r.json())
       .then(data => { if (data?.announcement?.active) setAnnouncement(data.announcement); })
       .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    function updateCount() {
+      const cart = getCart();
+      setCartCount(cart.reduce((s, i) => s + i.qty, 0));
+    }
+    updateCount();
+    window.addEventListener('storage', updateCount);
+    return () => window.removeEventListener('storage', updateCount);
   }, []);
 
   const annColors = announcement ? (COLORS[announcement.color] || COLORS.red) : null;
@@ -108,12 +120,17 @@ export default function Navbar() {
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
               </svg>
             </Link>
-            <Link href="/checkout" aria-label="Cart" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
+            <Link href="/checkout" aria-label="Cart" className="relative text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                 <line x1="3" y1="6" x2="21" y2="6"/>
                 <path d="M16 10a4 4 0 0 1-8 0"/>
               </svg>
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 bg-[#FF2200] text-[#080808] font-mono text-[9px] leading-none w-4 h-4 flex items-center justify-center rounded-full">
+                  {cartCount > 9 ? '9+' : cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </nav>

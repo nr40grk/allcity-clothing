@@ -1,12 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useT } from '@/components/LanguageProvider';
+import { getCart, clearCart } from '@/lib/cart';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const CARD_OPTIONS = { style: { base: { color: '#F0EDE8', fontFamily: '"IBM Plex Mono", monospace', fontSize: '13px', '::placeholder': { color: 'rgba(240,237,232,0.2)' } }, invalid: { color: '#FF2200' } } };
-const DEMO_CART = [{ name: 'ALLCITY CORE JACKET', size: 'M', qty: 1, price: 120 }];
 
 function BoxNowNote({ lang }) {
   return (
@@ -29,7 +29,7 @@ function BoxNowNote({ lang }) {
   );
 }
 
-function CheckoutForm({ cart }) {
+function CheckoutForm({ cart, onSuccess }) {
   const t = useT();
   const stripe = useStripe();
   const elements = useElements();
@@ -59,7 +59,9 @@ function CheckoutForm({ cart }) {
         body: JSON.stringify({ ...form, deliveryMethod: 'boxnow', boxnowAddress: `${form.address}, ${form.city} ${form.postalCode}`, items: cart, total }),
       });
 
+      clearCart();
       setSuccess(true);
+      if (onSuccess) onSuccess();
     } catch (err) { setError(err.message); } finally { setProcessing(false); }
   }
 
@@ -141,13 +143,29 @@ function CheckoutForm({ cart }) {
 
 export default function CheckoutPage() {
   const t = useT();
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => { setCart(getCart()); }, []);
+
+  if (cart.length === 0) return (
+    <div className="pt-20">
+      <div className="px-6 pt-16 pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
+        <h1 className="font-display text-6xl md:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
+      </div>
+      <div className="px-6 py-24 max-w-[1400px] mx-auto flex flex-col items-center gap-6">
+        <p className="font-mono text-sm text-[#F0EDE8]/40 uppercase tracking-widest">Your cart is empty</p>
+        <a href="/products" className="font-mono text-xs uppercase tracking-widest text-[#FF2200] hover:underline">Continue Shopping →</a>
+      </div>
+    </div>
+  );
+
   return (
     <div className="pt-20">
       <div className="px-6 pt-16 pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
         <h1 className="font-display text-6xl md:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
       <div className="px-6 py-14 max-w-[1400px] mx-auto">
-        <Elements stripe={stripePromise}><CheckoutForm cart={DEMO_CART} /></Elements>
+        <Elements stripe={stripePromise}><CheckoutForm cart={cart} onSuccess={() => setCart([])} /></Elements>
       </div>
     </div>
   );
