@@ -114,7 +114,7 @@ export default function Navbar() {
               gap: '12px',
             }}
           >
-            <LanguageToggle />
+            <span className="hidden md:block"><LanguageToggle /></span>
             <Link href="/products" aria-label="Search" className="text-[#F0EDE8]/60 hover:text-[#FF2200] transition-colors">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -173,7 +173,7 @@ export default function Navbar() {
           style={{ display: 'block', lineHeight: 0, pointerEvents: 'auto' }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="AllCity" style={{ height: '64px', width: 'auto', display: 'block' }} />
+          <img src="/logo.png" alt="AllCity" className="h-10 md:h-16 w-auto block" />
         </Link>
       </div>
     </>

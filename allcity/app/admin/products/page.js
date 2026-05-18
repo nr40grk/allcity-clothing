@@ -142,19 +142,21 @@ export default function AdminProducts() {
   return (
     <div className="min-h-screen bg-[#080808] pt-20 px-6 pb-20">
       <div className="max-w-[1000px] mx-auto">
-        <div className="flex items-center justify-between mb-10">
-          <div>
-            <h1 className="font-display text-4xl text-[#F0EDE8] tracking-tight">ADMIN PANEL</h1>
-            <p className="font-mono text-[11px] text-[#F0EDE8]/30 uppercase tracking-widest mt-1">Products</p>
-          </div>
-          <div className="flex gap-3">
-            <Link href="/admin/sales" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Sales</Link>
-            <Link href="/admin/settings" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Settings</Link>
-            <Link href="/admin/emails" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Emails</Link>
-            <a href="/" target="_blank" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#F0EDE8]/30 transition-colors">View Site ↗</a>
+        <div className="flex flex-col gap-4 mb-10">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="font-display text-3xl md:text-4xl text-[#F0EDE8] tracking-tight">ADMIN PANEL</h1>
+              <p className="font-mono text-[11px] text-[#F0EDE8]/30 uppercase tracking-widest mt-1">Products</p>
+            </div>
             <button onClick={() => { setShowForm(!showForm); setEditingId(null); setForm(EMPTY_FORM); }} className="font-mono text-xs uppercase tracking-widest bg-[#FF2200] text-[#080808] px-4 py-2 hover:bg-[#F0EDE8] transition-colors">
-              {showForm ? 'Cancel' : '+ New Product'}
+              {showForm ? 'Cancel' : '+ New'}
             </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/admin/sales" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-3 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Sales</Link>
+            <Link href="/admin/settings" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-3 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Settings</Link>
+            <Link href="/admin/emails" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-3 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Emails</Link>
+            <a href="/" target="_blank" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-3 py-2 hover:border-[#F0EDE8]/30 transition-colors">View Site ↗</a>
           </div>
         </div>
 
@@ -247,8 +249,8 @@ export default function AdminProducts() {
               <p className="font-mono text-[10px] text-[#F0EDE8]/20">These appear on hover in the product grid.</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2"><label className="label">Product Name *</label><input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="input w-full" placeholder="ALLCITY CORE JACKET" /></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-2"><label className="label">Product Name *</label><input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="input w-full" placeholder="ALLCITY CORE JACKET" /></div>
               <div><label className="label">Original Price (€) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="input w-full" placeholder="120" /></div>
               <div><label className="label">Sale Price (€) — optional</label><input type="number" step="0.01" min="0" value={form.salePrice} onChange={e => setForm({...form, salePrice: e.target.value})} className="input w-full" placeholder="90" /></div>
               <div><label className="label">Stock Quantity</label><input type="number" min="0" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})} className="input w-full" placeholder="0" /></div>
@@ -257,8 +259,8 @@ export default function AdminProducts() {
                   {clothingTypes.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
-              <div className="col-span-2"><label className="label">Description</label><input value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="input w-full" placeholder="Short product description" /></div>
-              <div className="col-span-2"><label className="label">Details (one per line)</label><textarea value={form.details} onChange={e => setForm({...form, details: e.target.value})} className="input w-full h-24 resize-none" placeholder={"100% Nylon shell\nWaterproof coating"} /></div>
+              <div className="sm:col-span-2"><label className="label">Description</label><input value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="input w-full" placeholder="Short product description" /></div>
+              <div className="sm:col-span-2"><label className="label">Details (one per line)</label><textarea value={form.details} onChange={e => setForm({...form, details: e.target.value})} className="input w-full h-24 resize-none" placeholder={"100% Nylon shell\nWaterproof coating"} /></div>
             </div>
 
             <div>
@@ -272,7 +274,7 @@ export default function AdminProducts() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div><label className="label">Availability</label><div className="flex items-center gap-3 mt-2"><Toggle on={isAvailable} onClick={() => setForm(prev => ({...prev, available: !bool(prev.available)}))} /><span style={{ color: isAvailable ? '#FF2200' : 'rgba(240,237,232,0.3)' }} className="font-mono text-xs">{isAvailable ? 'Available' : 'Sold Out'}</span></div></div>
               <div><label className="label">New Release Badge</label><div className="flex items-center gap-3 mt-2"><Toggle on={isNew} onClick={() => setForm(prev => ({...prev, isNew: !bool(prev.isNew)}))} /><span style={{ color: isNew ? '#FF2200' : 'rgba(240,237,232,0.3)' }} className="font-mono text-xs">{isNew ? 'Shows NEW badge' : 'No badge'}</span></div></div>
             </div>
@@ -292,31 +294,32 @@ export default function AdminProducts() {
               const isOn = bool(product.available);
               const onSale = product.salePrice && parseFloat(product.salePrice) < parseFloat(product.price);
               return (
-                <div key={product.id} className="flex items-center gap-4 border border-[#1a1a1a] px-4 py-3 hover:border-[#333] transition-colors">
-                  <div className="relative w-12 h-14 bg-[#111] flex-shrink-0 overflow-hidden">
-                    {product.image && <img src={product.image} alt="" className="w-full h-full object-cover" />}
-                    {bool(product.isNew) && <span className="absolute top-0 left-0 bg-[#FF2200] font-mono text-[8px] uppercase px-1 py-0.5 text-[#080808]">NEW</span>}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-mono text-xs text-[#F0EDE8]/80 truncate">{product.name}</p>
-                    <div className="flex items-center gap-2">
-                      {onSale ? <><span className="font-mono text-[11px] text-[#FF2200]">€{product.salePrice}</span><span className="font-mono text-[11px] text-[#F0EDE8]/20 line-through">€{product.price}</span></> : <span className="font-mono text-[11px] text-[#F0EDE8]/30">€{product.price}</span>}
-                      <span className="font-mono text-[11px] text-[#F0EDE8]/20">· {product.category}</span>
-                      {product.images?.length > 0 && <span className="font-mono text-[11px] text-[#F0EDE8]/20">· {product.images.length} extra photo{product.images.length > 1 ? 's' : ''}</span>}
-                      {product.stock != null && (
-                        <span style={{ color: product.stock === 0 ? '#FF2200' : product.stock <= 5 ? '#FF8800' : 'rgba(240,237,232,0.3)' }} className="font-mono text-[11px]">
-                          · {product.stock === 0 ? 'Out of stock' : `${product.stock} in stock`}
-                        </span>
-                      )}
+                <div key={product.id} className="flex flex-col sm:flex-row sm:items-center gap-3 border border-[#1a1a1a] px-4 py-3 hover:border-[#333] transition-colors">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="relative w-12 h-14 bg-[#111] flex-shrink-0 overflow-hidden">
+                      {product.image && <img src={product.image} alt="" className="w-full h-full object-cover" />}
+                      {bool(product.isNew) && <span className="absolute top-0 left-0 bg-[#FF2200] font-mono text-[8px] uppercase px-1 py-0.5 text-[#080808]">NEW</span>}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-mono text-xs text-[#F0EDE8]/80 truncate">{product.name}</p>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                        {onSale ? <><span className="font-mono text-[11px] text-[#FF2200]">€{product.salePrice}</span><span className="font-mono text-[11px] text-[#F0EDE8]/20 line-through">€{product.price}</span></> : <span className="font-mono text-[11px] text-[#F0EDE8]/30">€{product.price}</span>}
+                        <span className="font-mono text-[11px] text-[#F0EDE8]/20">{product.category}</span>
+                        {product.stock != null && (
+                          <span style={{ color: product.stock === 0 ? '#FF2200' : product.stock <= 5 ? '#FF8800' : 'rgba(240,237,232,0.3)' }} className="font-mono text-[11px]">
+                            {product.stock === 0 ? 'Out of stock' : `${product.stock} in stock`}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <Toggle on={isOn} onClick={() => toggleAvailable(product)} />
-                    <span style={{ color: isOn ? 'rgba(255,34,0,0.7)' : 'rgba(240,237,232,0.2)' }} className="font-mono text-[10px] uppercase tracking-widest w-14">{isOn ? 'Live' : 'Sold Out'}</span>
-                  </div>
-                  <div className="flex gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <div className="flex items-center gap-2">
+                      <Toggle on={isOn} onClick={() => toggleAvailable(product)} />
+                      <span style={{ color: isOn ? 'rgba(255,34,0,0.7)' : 'rgba(240,237,232,0.2)' }} className="font-mono text-[10px] uppercase tracking-widest w-14">{isOn ? 'Live' : 'Off'}</span>
+                    </div>
                     <button onClick={() => startEdit(product)} className="font-mono text-[11px] uppercase tracking-widest border border-[#333] text-[#F0EDE8]/40 px-3 py-1 hover:border-[#F0EDE8]/30 hover:text-[#F0EDE8]/70 transition-colors">Edit</button>
-                    <button onClick={() => handleDelete(product.id, product.name)} className="font-mono text-[11px] uppercase tracking-widest border border-[#333] text-[#F0EDE8]/20 px-3 py-1 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Delete</button>
+                    <button onClick={() => handleDelete(product.id, product.name)} className="font-mono text-[11px] uppercase tracking-widest border border-[#333] text-[#F0EDE8]/20 px-3 py-1 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Del</button>
                   </div>
                 </div>
               );
