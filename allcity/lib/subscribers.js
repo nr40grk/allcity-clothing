@@ -45,13 +45,14 @@ export async function removeSubscriber(email) {
 export async function saveSubscribers(subscribers) {
   if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error('BLOB_READ_WRITE_TOKEN not set.');
   const { put, list, del } = await import('@vercel/blob');
-  try {
-    const { blobs } = await list({ prefix: FILENAME });
-    if (blobs?.length > 0) await del(blobs.map(b => b.url));
-  } catch {}
-  await put(FILENAME, JSON.stringify(subscribers), {
+  const newBlob = await put(FILENAME, JSON.stringify(subscribers), {
     access: 'public',
     contentType: 'application/json',
     addRandomSuffix: false,
   });
+  try {
+    const { blobs } = await list({ prefix: FILENAME });
+    const stale = blobs.filter(b => b.url !== newBlob.url);
+    if (stale.length > 0) await del(stale.map(b => b.url));
+  } catch {}
 }
