@@ -27,9 +27,10 @@ export async function POST(req) {
         customerName: order.name,
         items: order.items || [],
         total: order.total,
-        shippingAddress: locker
-          ? `BoxNow Locker: ${locker} (${order.boxnowLockerAddress || ''})`.trim()
-          : `${order.address}, ${order.city} ${order.postalCode}`,
+        shippingAddress: `${order.address}, ${order.city} ${order.postalCode}`,
+        boxnowLockerName: order.boxnowLockerName || null,
+        boxnowLockerAddress: order.boxnowLockerAddress || null,
+        siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://allcity-clothing.vercel.app',
       }));
       await resend.emails.send({
         from: FROM_EMAIL,
