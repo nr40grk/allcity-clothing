@@ -8,14 +8,14 @@ import { getCart, clearCart, updateCartQty, removeFromCart } from '@/lib/cart';
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const CARD_OPTIONS = { style: { base: { color: '#F0EDE8', fontFamily: '"IBM Plex Mono", monospace', fontSize: '13px', '::placeholder': { color: 'rgba(240,237,232,0.2)' } }, invalid: { color: '#FF2200' } } };
 
-function BoxNowNote({ lang }) {
+function BoxNowLockerField({ value, onChange, lang }) {
   return (
-    <div className="mt-4 border border-[#FF2200]/30 bg-[#FF2200]/5 p-4 font-mono text-xs text-[#F0EDE8]/70 flex flex-col gap-3">
+    <div className="mt-4 border border-[#FF2200]/30 bg-[#FF2200]/5 p-4 font-mono text-xs flex flex-col gap-3">
       <p className="text-[#FF2200] uppercase tracking-widest text-[11px]">BoxNow Delivery</p>
       <p className="text-[#F0EDE8]/60 leading-relaxed">
         {lang === 'el'
-          ? 'Αφού ολοκληρωθεί η παραγγελία σου, θα επικοινωνήσουμε μαζί σου για τις λεπτομέρειες παράδοσης στο BoxNow locker.'
-          : 'After your order is placed, we will contact you with further details about your BoxNow locker delivery.'}
+          ? 'Βρες το κοντινότερο BoxNow locker και γράψε το όνομά του παρακάτω.'
+          : 'Find your nearest BoxNow locker and enter its name below.'}
       </p>
       <a
         href="https://boxnow.gr/locker-finder"
@@ -23,8 +23,16 @@ function BoxNowNote({ lang }) {
         rel="noreferrer"
         className="inline-flex items-center gap-1 text-[#FF2200] hover:underline uppercase tracking-widest text-[11px]"
       >
-        Find a BoxNow Locker →
+        {lang === 'el' ? 'Βρες Locker →' : 'Find a Locker →'}
       </a>
+      <input
+        type="text"
+        required
+        placeholder={lang === 'el' ? 'Όνομα BoxNow Locker (π.χ. Αθήνα Σύνταγμα)' : 'BoxNow Locker name (e.g. Athens Syntagma)'}
+        value={value}
+        onChange={onChange}
+        className="bg-[#111] border border-[#FF2200]/30 text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20 w-full"
+      />
     </div>
   );
 }
@@ -33,7 +41,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   const t = useT();
   const stripe = useStripe();
   const elements = useElements();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', postalCode: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', postalCode: '', boxnowLocker: '' });
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -56,7 +64,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
       await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, deliveryMethod: 'boxnow', boxnowAddress: `${form.address}, ${form.city} ${form.postalCode}`, items: cart, total }),
+        body: JSON.stringify({ ...form, deliveryMethod: 'boxnow', boxnowAddress: `${form.address}, ${form.city} ${form.postalCode}`, boxnowLocker: form.boxnowLocker, items: cart, total }),
       });
 
       clearCart();
@@ -70,7 +78,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
       <span className="font-display text-[80px] text-[#FF2200] leading-none">✓</span>
       <h2 className="font-display text-4xl text-[#F0EDE8]">{t('checkout.confirmed')}</h2>
       <p className="font-mono text-xs text-[#F0EDE8]/50 max-w-sm">{t('checkout.confirmedNote')}</p>
-      <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">We will contact you at {form.email} with your BoxNow locker details.</p>
+      <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">Your order will be delivered to the <strong>{form.boxnowLocker}</strong> BoxNow locker. We'll notify you when it's ready for pickup.</p>
     </div>
   );
 
@@ -96,7 +104,11 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
             <input type="text" placeholder={t('checkout.city')} required autoComplete="address-level2" className={inputClass} {...field('city')} />
             <input type="text" placeholder={t('checkout.postalCode')} required autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{4,10}" title="Enter a valid postal code" className={inputClass} {...field('postalCode')} />
           </div>
-          <BoxNowNote lang="en" />
+          <BoxNowLockerField
+            value={form.boxnowLocker}
+            onChange={e => setForm({ ...form, boxnowLocker: e.target.value })}
+            lang="en"
+          />
         </fieldset>
 
       </div>
