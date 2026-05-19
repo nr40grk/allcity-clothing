@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useT } from '@/components/LanguageProvider';
@@ -8,31 +8,49 @@ import { getCart, clearCart, updateCartQty, removeFromCart } from '@/lib/cart';
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const CARD_OPTIONS = { style: { base: { color: '#F0EDE8', fontFamily: '"IBM Plex Mono", monospace', fontSize: '13px', '::placeholder': { color: 'rgba(240,237,232,0.2)' } }, invalid: { color: '#FF2200' } } };
 
-function BoxNowLockerField({ value, onChange, lang }) {
+function BoxNowWidget({ onLockerSelect, selected }) {
+  const callbackRef = useRef(null);
+  callbackRef.current = onLockerSelect;
+
+  useEffect(() => {
+    window._bn_map_widget_config = {
+      parentElement: '#boxnow-widget-mount',
+      type: 'popup',
+      buttonSelector: '.bn-open-widget',
+      afterSelect: (s) => callbackRef.current?.({
+        id: s.boxnowLockerId || '',
+        name: s.name || s.boxnowLockerAddressLine1 || '', // gitleaks:allow
+        address: s.boxnowLockerAddressLine1 || '', // gitleaks:allow
+        postalCode: s.boxnowLockerPostalCode || '',
+      }),
+    };
+    if (!document.querySelector('script[data-boxnow]')) {
+      const el = document.createElement('script');
+      el.src = 'https://widget-cdn.boxnow.gr/map-widget/client/v5.js';
+      el.async = true; el.defer = true; el.dataset.boxnow = '1';
+      document.head.appendChild(el);
+    }
+  }, []);
+
   return (
     <div className="mt-4 border border-[#FF2200]/30 bg-[#FF2200]/5 p-4 font-mono text-xs flex flex-col gap-3">
       <p className="text-[#FF2200] uppercase tracking-widest text-[11px]">BoxNow Delivery</p>
-      <p className="text-[#F0EDE8]/60 leading-relaxed">
-        {lang === 'el'
-          ? 'Βρες το κοντινότερο BoxNow locker και γράψε το όνομά του παρακάτω.'
-          : 'Find your nearest BoxNow locker and enter its name below.'}
-      </p>
-      <a
-        href="https://boxnow.gr/locker-finder"
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex items-center gap-1 text-[#FF2200] hover:underline uppercase tracking-widest text-[11px]"
-      >
-        {lang === 'el' ? 'Βρες Locker →' : 'Find a Locker →'}
-      </a>
-      <input
-        type="text"
-        required
-        placeholder={lang === 'el' ? 'Όνομα BoxNow Locker (π.χ. Αθήνα Σύνταγμα)' : 'BoxNow Locker name (e.g. Athens Syntagma)'}
-        value={value}
-        onChange={onChange}
-        className="bg-[#111] border border-[#FF2200]/30 text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20 w-full"
-      />
+      <div id="boxnow-widget-mount" />
+      {selected?.name ? (
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[#F0EDE8]/80 text-xs">{selected.name}</p>
+            {selected.address && <p className="text-[#F0EDE8]/40 text-[11px] mt-0.5">{selected.address}</p>}
+          </div>
+          <button type="button" onClick={() => callbackRef.current?.(null)}
+            className="text-[#F0EDE8]/20 hover:text-[#FF2200] transition-colors text-sm leading-none flex-shrink-0">×</button>
+        </div>
+      ) : (
+        <p className="text-[#F0EDE8]/40 text-[11px]">No locker selected yet.</p>
+      )}
+      <button type="button" className="bn-open-widget font-mono text-[11px] uppercase tracking-widest text-[#FF2200] hover:underline text-left">
+        {selected?.name ? '↺ Change Locker' : '+ Choose BoxNow Locker'}
+      </button>
     </div>
   );
 }
@@ -41,7 +59,8 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   const t = useT();
   const stripe = useStripe();
   const elements = useElements();
-  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', postalCode: '', boxnowLocker: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', postalCode: '' });
+  const [locker, setLocker] = useState(null);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -52,6 +71,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!locker?.id) { setError('Please choose a BoxNow locker before paying.'); return; }
     if (!stripe || !elements) { setError('Payment not ready — refresh the page or contact us at info@allcityclothing.com'); return; }
     setProcessing(true); setError('');
     try {
@@ -64,7 +84,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
       await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, deliveryMethod: 'boxnow', boxnowAddress: `${form.address}, ${form.city} ${form.postalCode}`, boxnowLocker: form.boxnowLocker, items: cart, total }),
+        body: JSON.stringify({ ...form, deliveryMethod: 'boxnow', boxnowLockerId: locker?.id, boxnowLockerName: locker?.name, boxnowLockerAddress: locker?.address, items: cart, total }),
       });
 
       clearCart();
@@ -78,7 +98,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
       <span className="font-display text-[80px] text-[#FF2200] leading-none">✓</span>
       <h2 className="font-display text-4xl text-[#F0EDE8]">{t('checkout.confirmed')}</h2>
       <p className="font-mono text-xs text-[#F0EDE8]/50 max-w-sm">{t('checkout.confirmedNote')}</p>
-      <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">Your order will be delivered to the <strong>{form.boxnowLocker}</strong> BoxNow locker. We'll notify you when it's ready for pickup.</p>
+      <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">Your order will be delivered to the <strong>{locker?.name}</strong> BoxNow locker. We'll notify you when it's ready for pickup.</p>
     </div>
   );
 
@@ -104,11 +124,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
             <input type="text" placeholder={t('checkout.city')} required autoComplete="address-level2" className={inputClass} {...field('city')} />
             <input type="text" placeholder={t('checkout.postalCode')} required autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{4,10}" title="Enter a valid postal code" className={inputClass} {...field('postalCode')} />
           </div>
-          <BoxNowLockerField
-            value={form.boxnowLocker}
-            onChange={e => setForm({ ...form, boxnowLocker: e.target.value })}
-            lang="en"
-          />
+          <BoxNowWidget onLockerSelect={setLocker} selected={locker} />
         </fieldset>
 
       </div>

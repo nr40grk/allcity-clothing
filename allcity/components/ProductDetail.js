@@ -12,7 +12,7 @@ export default function ProductDetail({ product, allProducts = [] }) {
   const [activeImg, setActiveImg] = useState(0);
   const [addedMsg, setAddedMsg] = useState('');
 
-  const images = product.images?.length > 0 ? product.images : product.image ? [product.image] : [];
+  const images = [product.image, ...(product.images || [])].filter(Boolean);
   const related = allProducts.filter(p => p.id !== product.id && p.available).slice(0, 4);
   const onSale = product.salePrice && parseFloat(product.salePrice) < parseFloat(product.price);
 
