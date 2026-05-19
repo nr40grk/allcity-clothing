@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useT } from '@/components/LanguageProvider';
-import { getCart, clearCart, removeFromCart } from '@/lib/cart';
+import { getCart, clearCart, updateCartQty } from '@/lib/cart';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const CARD_OPTIONS = { style: { base: { color: '#F0EDE8', fontFamily: '"IBM Plex Mono", monospace', fontSize: '13px', '::placeholder': { color: 'rgba(240,237,232,0.2)' } }, invalid: { color: '#FF2200' } } };
@@ -29,7 +29,7 @@ function BoxNowNote({ lang }) {
   );
 }
 
-function CheckoutForm({ cart, onRemove, onSuccess }) {
+function CheckoutForm({ cart, onUpdateQty, onSuccess }) {
   const t = useT();
   const stripe = useStripe();
   const elements = useElements();
@@ -109,17 +109,25 @@ function CheckoutForm({ cart, onRemove, onSuccess }) {
               <div key={i} className="flex items-center gap-3 px-4 py-3 border-b border-[#1a1a1a] last:border-b-0">
                 <div className="flex-1 min-w-0">
                   <span className="font-mono text-xs text-[#F0EDE8]/70 block truncate">{item.name}</span>
-                  <span className="font-mono text-[11px] text-[#F0EDE8]/30">{item.size} × {item.qty}</span>
+                  <span className="font-mono text-[11px] text-[#F0EDE8]/30">{item.size}</span>
                 </div>
-                <span className="font-mono text-xs text-[#F0EDE8]/60 flex-shrink-0">€{(item.price * item.qty).toFixed(2)}</span>
-                <button
-                  type="button"
-                  onClick={() => onRemove(item.productId, item.size)}
-                  className="flex-shrink-0 font-mono text-[11px] text-[#F0EDE8]/20 hover:text-[#FF2200] transition-colors leading-none"
-                  aria-label="Remove item"
-                >
-                  ×
-                </button>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => onUpdateQty(item.productId, item.size, item.qty - 1)}
+                    disabled={item.qty <= 1}
+                    className="font-mono text-sm text-[#F0EDE8]/40 hover:text-[#F0EDE8] disabled:opacity-20 disabled:cursor-not-allowed leading-none w-5 text-center"
+                    aria-label="Decrease quantity"
+                  >−</button>
+                  <span className="font-mono text-xs text-[#F0EDE8]/70 w-4 text-center">{item.qty}</span>
+                  <button
+                    type="button"
+                    onClick={() => onUpdateQty(item.productId, item.size, item.qty + 1)}
+                    className="font-mono text-sm text-[#F0EDE8]/40 hover:text-[#F0EDE8] leading-none w-5 text-center"
+                    aria-label="Increase quantity"
+                  >+</button>
+                </div>
+                <span className="font-mono text-xs text-[#F0EDE8]/60 flex-shrink-0 w-16 text-right">€{(item.price * item.qty).toFixed(2)}</span>
               </div>
             ))}
             <div className="flex justify-between items-center px-4 py-4 bg-[#111]">
@@ -158,8 +166,8 @@ export default function CheckoutPage() {
 
   useEffect(() => { setCart(getCart()); }, []);
 
-  function handleRemove(productId, size) {
-    removeFromCart(productId, size);
+  function handleUpdateQty(productId, size, qty) {
+    updateCartQty(productId, size, qty);
     setCart(getCart());
   }
 
@@ -181,7 +189,7 @@ export default function CheckoutPage() {
         <h1 className="font-display text-6xl md:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
       <div className="px-6 py-14 max-w-[1400px] mx-auto">
-        <Elements stripe={stripePromise}><CheckoutForm cart={cart} onRemove={handleRemove} onSuccess={() => setCart([])} /></Elements>
+        <Elements stripe={stripePromise}><CheckoutForm cart={cart} onUpdateQty={handleUpdateQty} onSuccess={() => setCart([])} /></Elements>
       </div>
     </div>
   );

@@ -17,6 +17,14 @@ export function addToCart(product, size, qty = 1) {
   window.dispatchEvent(new Event('storage'));
 }
 
+export function updateCartQty(productId, size, qty) {
+  const cart = getCart();
+  const idx = cart.findIndex(i => i.productId === productId && i.size === size);
+  if (idx > -1) { cart[idx].qty = Math.max(1, qty); }
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  window.dispatchEvent(new Event('storage'));
+}
+
 export function removeFromCart(productId, size) {
   const cart = getCart().filter(i => !(i.productId === productId && i.size === size));
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
