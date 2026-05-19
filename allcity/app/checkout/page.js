@@ -6,7 +6,17 @@ import { useT } from '@/components/LanguageProvider';
 import { getCart, clearCart, updateCartQty, removeFromCart } from '@/lib/cart';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-const BOXNOW_SHIPPING_FEE = 3.00;
+// 2-digit prefixes covering all major island groups
+const ISLAND_PC2 = ['70','71','72','73','74','81','82','83','84','85','49','28','29'];
+// Specific 3-digit prefixes for smaller/Saronic islands
+const ISLAND_PC3 = ['185','188','189','311','370','374','640','680'];
+
+function boxnowShippingFee(postalCode) {
+  const c = (postalCode || '').replace(/\s/g, '');
+  if (c.length >= 3 && ISLAND_PC3.includes(c.slice(0, 3))) return 4.00;
+  if (c.length >= 2 && ISLAND_PC2.includes(c.slice(0, 2))) return 4.00;
+  return 3.00;
+}
 const CARD_OPTIONS = { style: { base: { color: '#F0EDE8', fontFamily: '"IBM Plex Mono", monospace', fontSize: '13px', '::placeholder': { color: 'rgba(240,237,232,0.2)' } }, invalid: { color: '#FF2200' } } };
 
 function BoxNowWidget({ onLockerSelect, selected }) {
@@ -66,7 +76,8 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const total = subtotal + BOXNOW_SHIPPING_FEE;
+  const shippingFee = boxnowShippingFee(form.postalCode);
+  const total = subtotal + shippingFee;
 
   const inputClass = "bg-[#111] border border-[#333] text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20 w-full";
   const field = (key) => ({ value: form[key], onChange: e => setForm({ ...form, [key]: e.target.value }) });
@@ -172,7 +183,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
             </div>
             <div className="flex justify-between items-center px-4 py-3 border-b border-[#1a1a1a]">
               <span className="font-mono text-xs text-[#F0EDE8]/40">BoxNow Shipping</span>
-              <span className="font-mono text-xs text-[#F0EDE8]/60">€{BOXNOW_SHIPPING_FEE.toFixed(2)}</span>
+              <span className="font-mono text-xs text-[#F0EDE8]/60">€{shippingFee.toFixed(2)}</span>
             </div>
             <div className="flex justify-between items-center px-4 py-4 bg-[#111]">
               <span className="font-mono text-xs uppercase tracking-widest text-[#F0EDE8]/40">{t('checkout.total')}</span>
