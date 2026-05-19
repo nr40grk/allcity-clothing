@@ -18,7 +18,7 @@ function BoxNowNote({ lang }) {
           : 'After your order is placed, we will contact you with further details about your BoxNow locker delivery.'}
       </p>
       <a
-        href="https://boxnow.gr/locator"
+        href="https://boxnow.gr/locker-finder"
         target="_blank"
         rel="noreferrer"
         className="inline-flex items-center gap-1 text-[#FF2200] hover:underline uppercase tracking-widest text-[11px]"

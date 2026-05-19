@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const SIZES_OPTIONS = ['XS','S','M','L','XL','XXL','ONE SIZE'];
 const DEFAULT_CATEGORIES = ['jackets','hoodies','tees','pants','accessories'];
-const EMPTY_FORM = { name:'', price:'', salePrice:'', stock:'', category:'jackets', available:true, isNew:false, image:'', images:[], sizes:['S','M','L','XL'], description:'', details:'' };
+const EMPTY_FORM = { name:'', price:'', salePrice:'', stockBySizes:{ S:0, M:0, L:0, XL:0 }, category:'jackets', available:true, isNew:false, image:'', images:[], sizes:['S','M','L','XL'], description:'', details:'' };
 const bool = v => v === true || v === 'true';
 
 function Toggle({ on, onClick }) {
@@ -85,18 +85,28 @@ export default function AdminProducts() {
   function handleDrop(e) { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) uploadImage(f); }
 
   function startEdit(product) {
-    setForm({ ...product, available: bool(product.available), isNew: bool(product.isNew), salePrice: product.salePrice || '', stock: product.stock != null ? String(product.stock) : '', details: Array.isArray(product.details) ? product.details.join('\n') : (product.details || ''), images: product.images || [] });
+    const sizes = product.sizes || ['S','M','L','XL'];
+    const stockBySizes = product.stockBySizes || Object.fromEntries(sizes.map(s => [s, 0]));
+    setForm({ ...product, available: bool(product.available), isNew: bool(product.isNew), salePrice: product.salePrice || '', stockBySizes, details: Array.isArray(product.details) ? product.details.join('\n') : (product.details || ''), images: product.images || [] });
     setEditingId(product.id); setShowForm(true); window.scrollTo({ top:0, behavior:'smooth' });
   }
 
   function resetForm() { setForm(EMPTY_FORM); setEditingId(null); setShowForm(false); }
-  function toggleSize(size) { setForm(prev => ({ ...prev, sizes: prev.sizes.includes(size) ? prev.sizes.filter(s => s !== size) : [...prev.sizes, size] })); }
+  function toggleSize(size) {
+    setForm(prev => {
+      const adding = !prev.sizes.includes(size);
+      const newSizes = adding ? [...prev.sizes, size] : prev.sizes.filter(s => s !== size);
+      const newStock = { ...prev.stockBySizes };
+      if (adding) { newStock[size] = 0; } else { delete newStock[size]; }
+      return { ...prev, sizes: newSizes, stockBySizes: newStock };
+    });
+  }
   function removeExtraImage(url) { setForm(prev => ({ ...prev, images: prev.images.filter(u => u !== url) })); }
 
   async function handleSave(e) {
     e.preventDefault();
     if (!form.image) { flash('Please upload a product image.'); return; }
-    const payload = { ...form, available: bool(form.available), isNew: bool(form.isNew), price: parseFloat(form.price), salePrice: form.salePrice ? parseFloat(form.salePrice) : null, stock: form.stock !== '' ? parseInt(form.stock) : null, details: form.details.split('\n').map(d => d.trim()).filter(Boolean), images: form.images || [] };
+    const payload = { ...form, available: bool(form.available), isNew: bool(form.isNew), price: parseFloat(form.price), salePrice: form.salePrice ? parseFloat(form.salePrice) : null, stock: null, stockBySizes: form.stockBySizes || {}, details: form.details.split('\n').map(d => d.trim()).filter(Boolean), images: form.images || [] };
     if (editingId) payload.id = editingId;
     const res = await fetch('/api/admin', { method: editingId ? 'PUT' : 'POST', headers: { 'Content-Type':'application/json', 'x-admin-token': token }, body: JSON.stringify(payload) });
     if (!res.ok) { flash('Error saving product.'); return; }
@@ -253,7 +263,22 @@ export default function AdminProducts() {
               <div className="sm:col-span-2"><label className="label">Product Name *</label><input required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="input w-full" placeholder="ALLCITY CORE JACKET" /></div>
               <div><label className="label">Original Price (€) *</label><input required type="number" step="0.01" min="0" value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="input w-full" placeholder="120" /></div>
               <div><label className="label">Sale Price (€) — optional</label><input type="number" step="0.01" min="0" value={form.salePrice} onChange={e => setForm({...form, salePrice: e.target.value})} className="input w-full" placeholder="90" /></div>
-              <div><label className="label">Stock Quantity</label><input type="number" min="0" value={form.stock} onChange={e => setForm({...form, stock: e.target.value})} className="input w-full" placeholder="0" /></div>
+              <div className="sm:col-span-2">
+                <label className="label">Stock per Size</label>
+                <div className="flex flex-wrap gap-3 mt-2">
+                  {form.sizes.map(size => (
+                    <div key={size} className="flex flex-col gap-1 items-center">
+                      <span className="font-mono text-[10px] text-[#F0EDE8]/30 uppercase">{size}</span>
+                      <input
+                        type="number" min="0"
+                        value={form.stockBySizes?.[size] ?? 0}
+                        onChange={e => setForm(prev => ({ ...prev, stockBySizes: { ...prev.stockBySizes, [size]: parseInt(e.target.value) || 0 } }))}
+                        className="input w-16 text-center"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div><label className="label">Category</label>
                 <select value={form.category} onChange={e => setForm({...form, category: e.target.value})} className="input w-full">
                   {clothingTypes.map(c => <option key={c} value={c}>{c}</option>)}
@@ -305,11 +330,17 @@ export default function AdminProducts() {
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                         {onSale ? <><span className="font-mono text-[11px] text-[#FF2200]">€{product.salePrice}</span><span className="font-mono text-[11px] text-[#F0EDE8]/20 line-through">€{product.price}</span></> : <span className="font-mono text-[11px] text-[#F0EDE8]/30">€{product.price}</span>}
                         <span className="font-mono text-[11px] text-[#F0EDE8]/20">{product.category}</span>
-                        {product.stock != null && (
-                          <span style={{ color: product.stock === 0 ? '#FF2200' : product.stock <= 5 ? '#FF8800' : 'rgba(240,237,232,0.3)' }} className="font-mono text-[11px]">
-                            {product.stock === 0 ? 'Out of stock' : `${product.stock} in stock`}
-                          </span>
-                        )}
+                        {(() => {
+                          const total = product.stockBySizes
+                            ? Object.values(product.stockBySizes).reduce((s, v) => s + (v || 0), 0)
+                            : product.stock;
+                          if (total == null) return null;
+                          return (
+                            <span style={{ color: total === 0 ? '#FF2200' : total <= 5 ? '#FF8800' : 'rgba(240,237,232,0.3)' }} className="font-mono text-[11px]">
+                              {total === 0 ? 'Out of stock' : `${total} in stock`}
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
                   </div>
