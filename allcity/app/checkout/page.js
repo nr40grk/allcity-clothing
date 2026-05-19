@@ -6,6 +6,7 @@ import { useT } from '@/components/LanguageProvider';
 import { getCart, clearCart, updateCartQty, removeFromCart } from '@/lib/cart';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+const BOXNOW_SHIPPING_FEE = 3.00;
 const CARD_OPTIONS = { style: { base: { color: '#F0EDE8', fontFamily: '"IBM Plex Mono", monospace', fontSize: '13px', '::placeholder': { color: 'rgba(240,237,232,0.2)' } }, invalid: { color: '#FF2200' } } };
 
 function BoxNowWidget({ onLockerSelect, selected }) {
@@ -64,7 +65,8 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const total = subtotal + BOXNOW_SHIPPING_FEE;
 
   const inputClass = "bg-[#111] border border-[#333] text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20 w-full";
   const field = (key) => ({ value: form[key], onChange: e => setForm({ ...form, [key]: e.target.value }) });
@@ -164,6 +166,14 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
                 >×</button>
               </div>
             ))}
+            <div className="flex justify-between items-center px-4 py-3 border-b border-[#1a1a1a]">
+              <span className="font-mono text-xs text-[#F0EDE8]/40">{t('checkout.subtotal') || 'Subtotal'}</span>
+              <span className="font-mono text-xs text-[#F0EDE8]/60">€{subtotal.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between items-center px-4 py-3 border-b border-[#1a1a1a]">
+              <span className="font-mono text-xs text-[#F0EDE8]/40">BoxNow Shipping</span>
+              <span className="font-mono text-xs text-[#F0EDE8]/60">€{BOXNOW_SHIPPING_FEE.toFixed(2)}</span>
+            </div>
             <div className="flex justify-between items-center px-4 py-4 bg-[#111]">
               <span className="font-mono text-xs uppercase tracking-widest text-[#F0EDE8]/40">{t('checkout.total')}</span>
               <span className="font-mono text-lg text-[#F0EDE8]">€{total.toFixed(2)}</span>
