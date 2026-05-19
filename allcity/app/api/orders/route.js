@@ -30,7 +30,7 @@ export async function POST(req) {
         shippingAddress: `${order.address}, ${order.city} ${order.postalCode}`,
         boxnowLockerName: order.boxnowLockerName || null,
         boxnowLockerAddress: order.boxnowLockerAddress || null,
-        siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://allcity-clothing.vercel.app',
+        siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.allcityclothing.com',
       }));
       await resend.emails.send({
         from: FROM_EMAIL,

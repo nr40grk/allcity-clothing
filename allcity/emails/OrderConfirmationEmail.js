@@ -11,7 +11,7 @@ export function OrderConfirmationEmail({
   shippingAddress,
   boxnowLockerName,
   boxnowLockerAddress,
-  siteUrl = 'https://allcity-clothing.vercel.app',
+  siteUrl = 'https://www.allcityclothing.com',
 }) {
   return (
     <Html>

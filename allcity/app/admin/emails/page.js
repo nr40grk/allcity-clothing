@@ -124,7 +124,7 @@ export default function AdminEmails() {
               <div>
                 <label className="label">CTA Button URL (optional)</label>
                 <input value={form.ctaUrl} onChange={e => setForm({...form, ctaUrl: e.target.value})}
-                  className="input w-full" placeholder="https://allcity-clothing.vercel.app/products" />
+                  className="input w-full" placeholder="https://www.allcityclothing.com/products" />
               </div>
             </div>
 

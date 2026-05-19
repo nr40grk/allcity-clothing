@@ -43,7 +43,7 @@ export function WelcomeEmail({ email }) {
 
           {/* CTA */}
           <Section style={ctaSection}>
-            <Link href="https://allcity-clothing.vercel.app/products" style={ctaButton}>
+            <Link href="https://www.allcityclothing.com/products" style={ctaButton}>
               SHOP NOW →
             </Link>
           </Section>
@@ -54,7 +54,7 @@ export function WelcomeEmail({ email }) {
           <Section style={footer}>
             <Text style={footerText}>ALLCITY Clothing · Athens, GR · @allcity_clothing</Text>
             <Text style={footerText}>
-              <Link href={`https://allcity-clothing.vercel.app/api/unsubscribe?email=${encodeURIComponent(email)}`} style={unsubLink}>
+              <Link href={`https://www.allcityclothing.com/api/unsubscribe?email=${encodeURIComponent(email)}`} style={unsubLink}>
                 Unsubscribe
               </Link>
             </Text>

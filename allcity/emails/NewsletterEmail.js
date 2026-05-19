@@ -47,7 +47,7 @@ export function NewsletterEmail({ subject, bodyText, ctaText, ctaUrl, subscriber
             <Text style={footerText}>ALLCITY Clothing · Athens, GR · @allcity_clothing</Text>
             <Text style={footerText}>
               <Link
-                href={`https://allcity-clothing.vercel.app/api/unsubscribe?email=${encodeURIComponent(subscriberEmail || '')}`}
+                href={`https://www.allcityclothing.com/api/unsubscribe?email=${encodeURIComponent(subscriberEmail || '')}`}
                 style={unsubLink}
               >
                 Unsubscribe
