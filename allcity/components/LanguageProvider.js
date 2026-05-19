@@ -10,7 +10,7 @@ const translations = {
       shopNow: 'Shop Now', viewAll: 'View All →', productsTitle: 'Products',
       strip1Label: 'Shipping', strip1Desc: 'Greece, Cyprus & Bulgaria: 1–3 days. International: calculated at checkout.',
       strip2Label: 'Street Quality', strip2Desc: 'Every piece is built for the city. No compromises on material or construction.',
-      strip3Label: 'DM for Orders', strip3Desc: 'Reach us on Instagram @allcity_clothing or via email for any questions.',
+      strip3Label: 'DM for Info', strip3Desc: 'Reach us on Instagram @allcity_clothing or via email for any questions.',
     },
     products: { title: 'Products', items: 'Items', soldOut: 'Sold Out', viewProduct: 'View Product →' },
     product: {
@@ -53,7 +53,7 @@ const translations = {
       shopNow: 'Αγόρασε Τώρα', viewAll: 'Δες Όλα →', productsTitle: 'Προϊόντα',
       strip1Label: 'Αποστολή', strip1Desc: 'Ελλάδα, Κύπρος & Βουλγαρία: 1–3 μέρες. Διεθνώς: υπολογίζεται στο checkout.',
       strip2Label: 'Street Ποιότητα', strip2Desc: 'Κάθε κομμάτι φτιαγμένο για την πόλη. Χωρίς συμβιβασμούς.',
-      strip3Label: 'Παραγγελίες μέσω DM', strip3Desc: 'Επικοινώνησε μαζί μας στο Instagram @allcity_clothing ή μέσω email.',
+      strip3Label: 'DM for Info', strip3Desc: 'Επικοινώνησε μαζί μας στο Instagram @allcity_clothing ή μέσω email.',
     },
     products: { title: 'Προϊόντα', items: 'Προϊόντα', soldOut: 'Εξαντλήθηκε', viewProduct: 'Δες Προϊόν →' },
     product: {
