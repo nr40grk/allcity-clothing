@@ -24,15 +24,21 @@ export default function ProductCard({ product }) {
             <img
               src={product.image}
               alt={product.name}
-              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-400"
-              style={{ opacity: hovered && hoverImage ? 0 : 1 }}
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out"
+              style={{
+                opacity: hovered && hoverImage ? 0 : 1,
+                transform: hovered && hoverImage ? 'scale(1.04)' : 'scale(1)',
+              }}
             />
             {hoverImage && (
               <img
                 src={hoverImage}
                 alt={product.name + ' alternate'}
-                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-400"
-                style={{ opacity: hovered ? 1 : 0 }}
+                className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out"
+                style={{
+                  opacity: hovered ? 1 : 0,
+                  transform: hovered ? 'scale(1)' : 'scale(1.04)',
+                }}
               />
             )}
           </>
