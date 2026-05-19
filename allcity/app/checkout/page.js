@@ -167,7 +167,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
               </div>
             ))}
             <div className="flex justify-between items-center px-4 py-3 border-b border-[#1a1a1a]">
-              <span className="font-mono text-xs text-[#F0EDE8]/40">{t('checkout.subtotal') || 'Subtotal'}</span>
+              <span className="font-mono text-xs text-[#F0EDE8]/40">Subtotal</span>
               <span className="font-mono text-xs text-[#F0EDE8]/60">€{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between items-center px-4 py-3 border-b border-[#1a1a1a]">
