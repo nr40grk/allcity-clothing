@@ -1,58 +1,30 @@
-const FILENAME = 'allcity-subscribers.json';
+import { getDb } from './db';
 
 export async function getSubscribers() {
   try {
-    if (!process.env.BLOB_READ_WRITE_TOKEN) return [];
-    const { list } = await import('@vercel/blob');
-    const { blobs } = await list({ prefix: FILENAME });
-    if (!blobs || blobs.length === 0) return [];
-    const sorted = blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-    const res = await fetch(sorted[0].url + '?t=' + Date.now());
-    if (!res.ok) return [];
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
+    if (!process.env.MONGODB_URI) return [];
+    const db = await getDb();
+    return await db.collection('subscribers').find({}).toArray();
   } catch { return []; }
 }
 
 export async function addSubscriber(email) {
-  const subscribers = await getSubscribers();
+  if (!process.env.MONGODB_URI) return { ok: false, reason: 'no_db' };
   const normalized = email.toLowerCase().trim();
-
-  // Check duplicate
-  if (subscribers.find(s => s.email === normalized)) {
-    return { ok: false, reason: 'already_subscribed' };
-  }
-
-  const newSubscriber = {
-    id: Date.now().toString(),
-    email: normalized,
-    subscribedAt: new Date().toISOString(),
-    active: true,
-  };
-
-  await saveSubscribers([...subscribers, newSubscriber]);
+  const db = await getDb();
+  const existing = await db.collection('subscribers').findOne({ email: normalized });
+  if (existing) return { ok: false, reason: 'already_subscribed' };
+  const newSubscriber = { id: Date.now().toString(), email: normalized, subscribedAt: new Date().toISOString(), active: true };
+  await db.collection('subscribers').insertOne({ _id: newSubscriber.id, ...newSubscriber });
   return { ok: true, subscriber: newSubscriber };
 }
 
 export async function removeSubscriber(email) {
-  const subscribers = await getSubscribers();
+  if (!process.env.MONGODB_URI) return;
   const normalized = email.toLowerCase().trim();
-  await saveSubscribers(subscribers.map(s =>
-    s.email === normalized ? { ...s, active: false, unsubscribedAt: new Date().toISOString() } : s
-  ));
-}
-
-export async function saveSubscribers(subscribers) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error('BLOB_READ_WRITE_TOKEN not set.');
-  const { put, list, del } = await import('@vercel/blob');
-  const newBlob = await put(FILENAME, JSON.stringify(subscribers), {
-    access: 'public',
-    contentType: 'application/json',
-    addRandomSuffix: false,
-  });
-  try {
-    const { blobs } = await list({ prefix: FILENAME });
-    const stale = blobs.filter(b => b.url !== newBlob.url);
-    if (stale.length > 0) await del(stale.map(b => b.url));
-  } catch {}
+  const db = await getDb();
+  await db.collection('subscribers').updateOne(
+    { email: normalized },
+    { $set: { active: false, unsubscribedAt: new Date().toISOString() } }
+  );
 }

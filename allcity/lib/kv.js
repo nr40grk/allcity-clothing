@@ -1,12 +1,5 @@
 import { fallbackProducts } from './products';
-import { MongoClient } from 'mongodb';
-
-let client;
-async function getDb() {
-  if (!client) client = new MongoClient(process.env.MONGODB_URI);
-  await client.connect();
-  return client.db('allcity');
-}
+import { getDb } from './db';
 
 export async function getProducts() {
   try {

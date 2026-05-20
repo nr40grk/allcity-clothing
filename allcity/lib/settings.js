@@ -1,25 +1,31 @@
-const FILENAME = 'allcity-settings.json';
+import { getDb } from './db';
+
 export const DEFAULT_SETTINGS = {
   announcement: { active: false, textEN: 'FREE SHIPPING ON ORDERS OVER €80', textGR: 'ΔΩΡΕΑΝ ΑΠΟΣΤΟΛΗ ΓΙΑ ΠΑΡΑΓΓΕΛΙΕΣ ΑΝΩ ΤΩΝ €80', color: 'red' },
   banner: { active: false, titleEN: 'NEW DROP', titleGR: 'ΝΕΑ ΣΥΛΛΟΓΗ', subtitleEN: 'SS25 Collection — Available Now', subtitleGR: 'Συλλογή ΑΧ25 — Τώρα Διαθέσιμη', ctaTextEN: 'Shop Now', ctaTextGR: 'Αγόρασε Τώρα', ctaLink: '/products', image: '' },
   clothingTypes: ['jackets', 'hoodies', 'tees', 'pants', 'accessories'],
 };
+
 export async function getSettings() {
   try {
-    if (!process.env.BLOB_READ_WRITE_TOKEN) return DEFAULT_SETTINGS;
-    const { list } = await import('@vercel/blob');
-    const { blobs } = await list({ prefix: FILENAME });
-    if (!blobs || blobs.length === 0) return DEFAULT_SETTINGS;
-    const sorted = blobs.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-    const res = await fetch(sorted[0].url + '?t=' + Date.now());
-    if (!res.ok) return DEFAULT_SETTINGS;
-    const data = await res.json();
-    return { announcement: { ...DEFAULT_SETTINGS.announcement, ...data.announcement }, banner: { ...DEFAULT_SETTINGS.banner, ...data.banner }, clothingTypes: data.clothingTypes ?? DEFAULT_SETTINGS.clothingTypes };
+    if (!process.env.MONGODB_URI) return DEFAULT_SETTINGS;
+    const db = await getDb();
+    const doc = await db.collection('store').findOne({ _id: 'settings' });
+    if (!doc) return DEFAULT_SETTINGS;
+    return {
+      announcement: { ...DEFAULT_SETTINGS.announcement, ...doc.announcement },
+      banner: { ...DEFAULT_SETTINGS.banner, ...doc.banner },
+      clothingTypes: doc.clothingTypes ?? DEFAULT_SETTINGS.clothingTypes,
+    };
   } catch { return DEFAULT_SETTINGS; }
 }
+
 export async function saveSettings(settings) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) throw new Error('BLOB_READ_WRITE_TOKEN not set.');
-  const { put, list, del } = await import('@vercel/blob');
-  try { const { blobs } = await list({ prefix: FILENAME }); if (blobs?.length > 0) await del(blobs.map(b => b.url)); } catch {}
-  await put(FILENAME, JSON.stringify(settings), { access: 'public', contentType: 'application/json', addRandomSuffix: false });
+  if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI not set.');
+  const db = await getDb();
+  await db.collection('store').updateOne(
+    { _id: 'settings' },
+    { $set: settings },
+    { upsert: true }
+  );
 }
