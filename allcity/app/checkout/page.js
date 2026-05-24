@@ -131,16 +131,16 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   }
 
   if (success) return (
-    <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
-      <span className="font-display text-[80px] text-[#FF2200] leading-none">✓</span>
-      <h2 className="font-display text-4xl text-[#F0EDE8]">{t('checkout.confirmed')}</h2>
+    <div className="flex flex-col items-center justify-center py-16 md:py-24 gap-4 md:gap-6 text-center px-4">
+      <span className="font-display text-[60px] md:text-[80px] text-[#FF2200] leading-none">✓</span>
+      <h2 className="font-display text-3xl md:text-4xl text-[#F0EDE8]">{t('checkout.confirmed')}</h2>
       <p className="font-mono text-xs text-[#F0EDE8]/50 max-w-sm">{t('checkout.confirmedNote')}</p>
       <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">Your order will be delivered to the <strong>{locker?.name}</strong> BoxNow locker. We will notify you when it is ready for pickup.</p>
     </div>
   );
 
   return (
-    <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-10 lg:gap-20">
+    <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20">
       <div className="flex flex-col gap-8">
 
         {/* Contact */}
@@ -171,7 +171,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
           <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.orderSummary')}</p>
           <div className="border border-[#1a1a1a]">
             {cart.map((item, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-3 border-b border-[#1a1a1a] last:border-b-0">
+              <div key={i} className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-3 border-b border-[#1a1a1a] last:border-b-0">
                 <div className="flex-1 min-w-0">
                   <span className="font-mono text-xs text-[#F0EDE8]/70 block truncate">{item.name}</span>
                   <span className="font-mono text-[11px] text-[#F0EDE8]/30">{item.size}</span>
@@ -273,10 +273,10 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) return (
     <div className="pt-20">
-      <div className="px-6 pt-16 pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
-        <h1 className="font-display text-6xl md:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
+      <div className="px-4 md:px-6 pt-12 md:pt-16 pb-8 md:pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
+        <h1 className="font-display text-4xl md:text-6xl lg:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
-      <div className="px-6 py-24 max-w-[1400px] mx-auto flex flex-col items-center gap-6">
+      <div className="px-4 md:px-6 py-16 md:py-24 max-w-[1400px] mx-auto flex flex-col items-center gap-6">
         <p className="font-mono text-sm text-[#F0EDE8]/40 uppercase tracking-widest">Your cart is empty</p>
         <a href="/products" className="font-mono text-xs uppercase tracking-widest text-[#FF2200] hover:underline">Continue Shopping →</a>
       </div>
@@ -285,10 +285,10 @@ export default function CheckoutPage() {
 
   return (
     <div className="pt-20">
-      <div className="px-6 pt-16 pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
-        <h1 className="font-display text-6xl md:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
+      <div className="px-4 md:px-6 pt-12 md:pt-16 pb-8 md:pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
+        <h1 className="font-display text-4xl md:text-6xl lg:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
-      <div className="px-6 py-14 max-w-[1400px] mx-auto">
+      <div className="px-4 md:px-6 py-8 md:py-14 max-w-[1400px] mx-auto">
         {options ? (
           <Elements stripe={stripePromise} options={options}>
             <CheckoutForm cart={cart} onUpdateQty={handleUpdateQty} onRemove={handleRemove} onSuccess={() => setCart([])} />
