@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useT } from '@/components/LanguageProvider';
 import { getCart, clearCart, updateCartQty, removeFromCart } from '@/lib/cart';
 
@@ -11,13 +11,30 @@ const ISLAND_PC2 = ['70','71','72','73','74','81','82','83','84','85','49','28',
 // Specific 3-digit prefixes for smaller/Saronic islands
 const ISLAND_PC3 = ['185','188','189','311','370','374','640','680'];
 
+const APPEARANCE = {
+  theme: 'night',
+  variables: {
+    colorPrimary: '#FF2200',
+    colorBackground: '#111111',
+    colorText: '#F0EDE8',
+    colorDanger: '#FF2200',
+    fontFamily: '"IBM Plex Mono", monospace',
+    borderRadius: '0px',
+    spacingUnit: '4px',
+  },
+  rules: {
+    '.Input': { border: '1px solid #333', boxShadow: 'none' },
+    '.Input:focus': { border: '1px solid #FF2200', boxShadow: 'none' },
+    '.Label': { color: 'rgba(240,237,232,0.4)', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.15em' },
+  },
+};
+
 function boxnowShippingFee(postalCode) {
   const c = (postalCode || '').replace(/\s/g, '');
   if (c.length >= 3 && ISLAND_PC3.includes(c.slice(0, 3))) return 4.00;
   if (c.length >= 2 && ISLAND_PC2.includes(c.slice(0, 2))) return 4.00;
   return 3.00;
 }
-const CARD_OPTIONS = { style: { base: { color: '#F0EDE8', fontFamily: '"IBM Plex Mono", monospace', fontSize: '13px', '::placeholder': { color: 'rgba(240,237,232,0.2)' } }, invalid: { color: '#FF2200' } } };
 
 function BoxNowWidget({ onLockerSelect, selected }) {
   const callbackRef = useRef(null);
@@ -88,11 +105,18 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
     if (!stripe || !elements) { setError('Payment not ready — refresh the page or contact us at info@allcityclothing.com'); return; }
     setProcessing(true); setError('');
     try {
-      const intentRes = await fetch('/api/create-payment-intent', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: Math.round(total * 100), currency: 'eur' }) });
-      const { clientSecret, error: intentError } = await intentRes.json();
-      if (intentError) throw new Error(intentError);
-      const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, { payment_method: { card: elements.getElement(CardElement), billing_details: { name: form.name, email: form.email } } });
-      if (stripeError) throw new Error(stripeError.message);
+      const { error: submitError, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${typeof window !== 'undefined' ? window.location.origin : ''}/checkout?success=true`,
+          payment_method_data: { billing_details: { name: form.name, email: form.email } },
+        },
+        redirect: 'if_required',
+      });
+      if (submitError) throw new Error(submitError.message);
+      if (!paymentIntent || paymentIntent.status !== 'succeeded') {
+        throw new Error('Payment was not completed. Please try again.');
+      }
 
       await fetch('/api/orders', {
         method: 'POST',
@@ -111,7 +135,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
       <span className="font-display text-[80px] text-[#FF2200] leading-none">✓</span>
       <h2 className="font-display text-4xl text-[#F0EDE8]">{t('checkout.confirmed')}</h2>
       <p className="font-mono text-xs text-[#F0EDE8]/50 max-w-sm">{t('checkout.confirmedNote')}</p>
-      <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">Your order will be delivered to the <strong>{locker?.name}</strong> BoxNow locker. We'll notify you when it's ready for pickup.</p>
+      <p className="font-mono text-xs text-[#FF2200]/80 max-w-sm">Your order will be delivered to the <strong>{locker?.name}</strong> BoxNow locker. We will notify you when it is ready for pickup.</p>
     </div>
   );
 
@@ -193,14 +217,14 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
         </div>
 
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.cardDetails')}</p>
+          <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">Payment</p>
           {!stripe ? (
             <div className="border border-[#FF2200]/40 bg-[#FF2200]/5 px-4 py-4 font-mono text-xs text-[#FF2200]/70">
               Payment not configured — Stripe key missing. Set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in Vercel and redeploy.
             </div>
           ) : (
-            <div className="border border-[#333] px-4 py-4 focus-within:border-[#FF2200] transition-colors">
-              <CardElement options={CARD_OPTIONS} />
+            <div className="border border-[#333] p-4 focus-within:border-[#FF2200] transition-colors">
+              <PaymentElement options={{ layout: 'tabs' }} />
             </div>
           )}
           <p className="font-mono text-[11px] text-[#F0EDE8]/20 mt-2">{t('checkout.stripeNote')}</p>
@@ -218,8 +242,24 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
 export default function CheckoutPage() {
   const t = useT();
   const [cart, setCart] = useState([]);
+  const [options, setOptions] = useState(null);
 
   useEffect(() => { setCart(getCart()); }, []);
+
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0) + 3.00;
+
+  useEffect(() => {
+    async function createIntent() {
+      const amount = Math.round(total * 100);
+      if (amount < 50) return;
+      try {
+        const res = await fetch('/api/create-payment-intent', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount, currency: 'eur' }) });
+        const data = await res.json();
+        if (data.clientSecret) setOptions({ clientSecret: data.clientSecret, appearance: APPEARANCE });
+      } catch (e) { console.error('Payment intent failed:', e); }
+    }
+    if (cart.length > 0) createIntent();
+  }, [total, cart.length]);
 
   function handleUpdateQty(productId, size, qty) {
     updateCartQty(productId, size, qty);
@@ -249,7 +289,13 @@ export default function CheckoutPage() {
         <h1 className="font-display text-6xl md:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
       <div className="px-6 py-14 max-w-[1400px] mx-auto">
-        <Elements stripe={stripePromise}><CheckoutForm cart={cart} onUpdateQty={handleUpdateQty} onRemove={handleRemove} onSuccess={() => setCart([])} /></Elements>
+        {options ? (
+          <Elements stripe={stripePromise} options={options}>
+            <CheckoutForm cart={cart} onUpdateQty={handleUpdateQty} onRemove={handleRemove} onSuccess={() => setCart([])} />
+          </Elements>
+        ) : (
+          <p className="font-mono text-xs text-[#F0EDE8]/30">Loading payment options...</p>
+        )}
       </div>
     </div>
   );

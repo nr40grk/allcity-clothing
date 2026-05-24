@@ -46,7 +46,7 @@ const translations = {
     footer: { subscribe: 'Subscribe to our emails', emailPlaceholder: 'Email', storeLocation: 'Contact', findUs: '@allcity_clothing — Athens, GR' },
   },
   el: {
-    nav: { home: 'Αρχική', products: 'Προϊόντα', about: 'Σχετικά μας', shipping: 'Αποστολή & Πληρωμή' },
+    nav: { home: 'Αρχική', products: 'Προϊόντα', about: 'Σχετικά με εμάς', shipping: 'Αποστολή & Πληρωμή' },
     home: {
       collection: 'Συλλογή ΑΧ25', location: 'Αθήνα, GR',
       tagline: 'Ρούχα γεννημένα στους δρόμους. Χωρίς κανόνες. Χωρίς όρια. Hood Controlling. F*ck the Game. Allcity Clothing.',

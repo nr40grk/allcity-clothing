@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@react-email/components": "^0.0.22",
+    "@vercel/analytics": "^1.5.0",
     "@stripe/react-stripe-js": "^2.7.0",
     "@stripe/stripe-js": "^3.4.0",
     "@vercel/blob": "^0.27.0",

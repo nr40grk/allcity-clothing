@@ -105,7 +105,7 @@ export default function AdminSales() {
                     </div>
                     <div className="flex items-center gap-3 flex-shrink-0">
                       <span className="font-mono text-xs text-[#F0EDE8]/60">
-                        \u20ac{order.total?.toFixed(2)}
+                        €{order.total?.toFixed(2)}
                       </span>
                       <span
                         className="font-mono text-[9px] uppercase tracking-widest px-2 py-0.5"
@@ -132,8 +132,8 @@ export default function AdminSales() {
                           {order.deliveryMethod !== 'boxnow' && (
                             <p className="font-mono text-xs text-[#F0EDE8]/50">{order.address}, {order.city} {order.postalCode}</p>
                           )}
-                          {order.deliveryMethod === 'boxnow' && order.boxnowAddress && (
-                            <p className="font-mono text-xs text-[#F0EDE8]/50">{order.boxnowAddress}</p>
+                          {order.deliveryMethod === 'boxnow' && order.boxnowLockerAddress && (
+                            <p className="font-mono text-xs text-[#F0EDE8]/50">{order.boxnowLockerAddress}</p>
                           )}
                         </div>
                       </div>
@@ -143,12 +143,12 @@ export default function AdminSales() {
                         {(order.items || []).map((item, i) => (
                           <div key={i} className="flex justify-between font-mono text-xs text-[#F0EDE8]/60 mb-1">
                             <span>{item.name} — {item.size} x{item.qty}</span>
-                            <span>\u20ac{(item.price * item.qty).toFixed(2)}</span>
+                            <span>€{(item.price * item.qty).toFixed(2)}</span>
                           </div>
                         ))}
                         <div className="flex justify-between font-mono text-xs text-[#F0EDE8]/80 border-t border-[#1a1a1a] pt-2 mt-2">
                           <span>Total</span>
-                          <span>\u20ac{order.total?.toFixed(2)}</span>
+                          <span>€{order.total?.toFixed(2)}</span>
                         </div>
                       </div>
 

@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
+import Reviews from '@/components/Reviews';
 import { useT, useLanguage } from '@/components/LanguageProvider';
 
 function HeroVideo() {
@@ -204,6 +205,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Reviews ──────────────────────────────────────────────── */}
+      <Reviews />
 
       {/* ── Info strip ───────────────────────────────────────────── */}
       <section className="border-t border-[#1a1a1a] px-6 py-16 bg-[#080808]">

@@ -100,8 +100,8 @@ export default function Footer() {
 
           {/* Right — payment + copyright */}
           <div className="flex flex-col items-end gap-2">
-            <div className="flex gap-2">
-              {['VISA','MC','AMEX','GPAY'].map(c => <span key={c} className="font-mono text-[9px] border border-[#333] px-2 py-1 text-[#F0EDE8]/30">{c}</span>)}
+            <div className="flex gap-2 flex-wrap justify-end">
+              {['VISA','MC','AMEX','APPLE PAY','GOOGLE PAY','LINK','REVOLUT'].map(c => <span key={c} className="font-mono text-[9px] border border-[#333] px-2 py-1 text-[#F0EDE8]/30">{c}</span>)}
             </div>
             <p className="font-mono text-[11px] text-[#F0EDE8]/20">© {new Date().getFullYear()}, ALLCITY</p>
           </div>
