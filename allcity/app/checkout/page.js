@@ -36,21 +36,26 @@ function boxnowShippingFee(postalCode) {
   return 3.00;
 }
 
-function BoxNowWidget({ onLockerSelect, selected, onOpen }) {
+function BoxNowWidget({ onLockerSelect, selected, onOpen, onClose }) {
   const callbackRef = useRef(null);
   callbackRef.current = onLockerSelect;
+  const closeRef = useRef(null);
+  closeRef.current = onClose;
 
   useEffect(() => {
     window._bn_map_widget_config = {
       parentElement: '#boxnow-widget-mount',
       type: 'popup',
       buttonSelector: '.bn-open-widget',
-      afterSelect: (s) => callbackRef.current?.({
-        id: s.boxnowLockerId || '',
-        name: s.name || s.boxnowLockerAddressLine1 || '', // gitleaks:allow
-        address: s.boxnowLockerAddressLine1 || '', // gitleaks:allow
-        postalCode: s.boxnowLockerPostalCode || '',
-      }),
+      afterSelect: (s) => {
+        callbackRef.current?.({
+          id: s.boxnowLockerId || '',
+          name: s.name || s.boxnowLockerAddressLine1 || '', // gitleaks:allow
+          address: s.boxnowLockerAddressLine1 || '', // gitleaks:allow
+          postalCode: s.boxnowLockerPostalCode || '',
+        });
+        closeRef.current?.();
+      },
     };
     if (!document.querySelector('script[data-boxnow]')) {
       const el = document.createElement('script');
@@ -93,15 +98,6 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const hasPopup = !!document.querySelector('.bn-modal, .bn-popup, [class*="bn-modal"], [class*="bn-popup"]');
-      if (!hasPopup) setBoxnowOpen(false);
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, []);
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const shippingFee = boxnowShippingFee(form.postalCode);
   const total = subtotal + shippingFee;
@@ -151,7 +147,14 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
 
   return (
     <>
-      {boxnowOpen && <div className="fixed inset-0 bg-black/95" style={{ zIndex: 99999 }} aria-hidden="true" />}
+      {boxnowOpen && (
+        <div
+          className="fixed inset-0 bg-black"
+          style={{ zIndex: 99999 }}
+          onClick={() => setBoxnowOpen(false)}
+          aria-hidden="true"
+        />
+      )}
       <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 min-w-0">
       <div className="flex flex-col gap-8 min-w-0">
 
@@ -173,7 +176,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
             <input type="text" placeholder={t('checkout.city')} required autoComplete="address-level2" className={inputClass} {...field('city')} />
             <input type="text" placeholder={t('checkout.postalCode')} required autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{4,10}" title="Enter a valid postal code" className={inputClass} {...field('postalCode')} />
           </div>
-          <BoxNowWidget onLockerSelect={setLocker} selected={locker} onOpen={() => setBoxnowOpen(true)} />
+          <BoxNowWidget onLockerSelect={setLocker} selected={locker} onOpen={() => setBoxnowOpen(true)} onClose={() => setBoxnowOpen(false)} />
         </div>
 
       </div>
