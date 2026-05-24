@@ -218,7 +218,11 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
 
         <div className="min-w-0">
           <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">Payment</p>
-          {!stripe ? (
+          {!locker?.id ? (
+            <div className="border border-[#F0EDE8]/10 bg-[#111] px-4 py-5 font-mono text-xs text-[#F0EDE8]/30">
+              Choose a BoxNow locker to unlock payment options.
+            </div>
+          ) : !stripe ? (
             <div className="border border-[#FF2200]/40 bg-[#FF2200]/5 px-4 py-4 font-mono text-xs text-[#FF2200]/70">
               Payment not configured — Stripe key missing. Set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in Vercel and redeploy.
             </div>
@@ -227,12 +231,12 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
               <PaymentElement options={{ layout: 'tabs' }} />
             </div>
           )}
-          <p className="font-mono text-[11px] text-[#F0EDE8]/20 mt-2">{t('checkout.stripeNote')}</p>
+          {locker?.id && <p className="font-mono text-[11px] text-[#F0EDE8]/20 mt-2">{t('checkout.stripeNote')}</p>}
         </div>
 
         {error && <p className="font-mono text-xs text-[#FF2200]">{error}</p>}
-        <button type="submit" disabled={processing || !stripe} className="w-full font-mono text-xs uppercase tracking-widest bg-[#F0EDE8] text-[#080808] py-4 hover:bg-[#FF2200] transition-colors duration-200 disabled:opacity-40">
-          {processing ? t('checkout.processing') : `${t('checkout.pay')} €${total.toFixed(2)}`}
+        <button type="submit" disabled={processing || !stripe || !locker?.id} className="w-full font-mono text-xs uppercase tracking-widest bg-[#F0EDE8] text-[#080808] py-4 hover:bg-[#FF2200] transition-colors duration-200 disabled:opacity-40">
+          {processing ? t('checkout.processing') : locker?.id ? `${t('checkout.pay')} €${total.toFixed(2)}` : 'Choose a Locker First'}
         </button>
       </div>
     </form>
