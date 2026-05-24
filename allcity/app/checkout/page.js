@@ -224,7 +224,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
             </div>
           ) : (
             <div className="border border-[#333] p-3 md:p-4 focus-within:border-[#FF2200] transition-colors overflow-x-hidden">
-              <PaymentElement options={{ layout: { type: 'accordion', defaultCollapsed: false }, wallets: { applePay: 'always', googlePay: 'always' } }} />
+              <PaymentElement options={{ layout: { type: 'accordion', defaultCollapsed: false }, wallets: { applePay: 'auto', googlePay: 'auto' } }} />
             </div>
           )}
           <p className="font-mono text-[11px] text-[#F0EDE8]/20 mt-2">{t('checkout.stripeNote')}</p>
