@@ -51,26 +51,6 @@ export async function POST(req) {
     }
   } catch (e) { console.error('Order email failed:', e.message); }
 
-  // Send review request email (async, no blocking)
-  try {
-    const resend = getResend();
-    if (resend) {
-      const orderNum = saved.id || saved.orderNumber || Date.now();
-      const reviewHtml = await render(ReviewRequestEmail({
-        customerName: order.name,
-        orderNumber: orderNum,
-        reviewLink: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.allcityclothing.com'}/reviews?order=${saved.id || ''}`,
-        siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.allcityclothing.com',
-      }));
-      await resend.emails.send({
-        from: FROM_EMAIL,
-        to: order.email,
-        subject: `How was your ALLCITY order? — Write a review`,
-        html: reviewHtml,
-      });
-    }
-  } catch (e) { console.error('Review request email failed:', e.message); }
-
   return NextResponse.json(saved);
 }
 
@@ -78,5 +58,27 @@ export async function PUT(req) {
   if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id, status } = await req.json();
   const updated = await updateOrderStatus(id, status);
+
+  // Send review request email when order is fulfilled
+  if (status === 'fulfilled' && updated.email) {
+    try {
+      const resend = getResend();
+      if (resend) {
+        const reviewHtml = await render(ReviewRequestEmail({
+          customerName: updated.name,
+          orderNumber: updated.id || Date.now(),
+          reviewLink: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.allcityclothing.com'}/reviews?order=${updated.id || ''}`,
+          siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.allcityclothing.com',
+        }));
+        await resend.emails.send({
+          from: FROM_EMAIL,
+          to: updated.email,
+          subject: `How was your ALLCITY order? — Write a review`,
+          html: reviewHtml,
+        });
+      }
+    } catch (e) { console.error('Review request email failed:', e.message); }
+  }
+
   return NextResponse.json(updated);
 }
