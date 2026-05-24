@@ -4,7 +4,7 @@ export async function POST(req) {
   try {
     const { amount, currency = 'eur' } = await req.json();
     if (!amount || amount < 50) return NextResponse.json({ error: 'Invalid amount.' }, { status: 400 });
-    const paymentIntent = await stripe.paymentIntents.create({ amount, currency, automatic_payment_methods: { enabled: true } });
+    const paymentIntent = await stripe.paymentIntents.create({ amount, currency, payment_method_types: ['card', 'link', 'revolut_pay'] });
     return NextResponse.json({ clientSecret: paymentIntent.client_secret, paymentIntentId: paymentIntent.id });
   } catch (err) { return NextResponse.json({ error: err.message }, { status: 500 }); }
 }
