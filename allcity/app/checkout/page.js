@@ -61,7 +61,7 @@ function BoxNowWidget({ onLockerSelect, selected }) {
   }, []);
 
   return (
-    <div className="mt-4 border border-[#FF2200]/30 bg-[#FF2200]/5 p-4 font-mono text-xs flex flex-col gap-3">
+    <div className="mt-4 border border-[#FF2200]/30 bg-[#FF2200]/5 p-4 font-mono text-xs flex flex-col gap-3 min-w-0 overflow-x-hidden">
       <p className="text-[#FF2200] uppercase tracking-widest text-[11px]">BoxNow Delivery</p>
       <div id="boxnow-widget-mount" />
       {selected?.name ? (
@@ -140,36 +140,36 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20">
-      <div className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 min-w-0">
+      <div className="flex flex-col gap-8 min-w-0">
 
         {/* Contact */}
-        <fieldset>
-          <legend className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.contact')}</legend>
+        <div className="min-w-0">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.contact')}</p>
           <div className="flex flex-col gap-3">
             <input type="text" placeholder={t('checkout.fullName')} required autoComplete="name" className={inputClass} {...field('name')} />
             <input type="email" placeholder={t('checkout.email')} required autoComplete="email" className={inputClass} {...field('email')} />
             <input type="tel" placeholder={t('checkout.phone')} required autoComplete="tel" pattern="[+]?[0-9\s\-()]{7,20}" title="Enter a valid phone number" className={inputClass} {...field('phone')} />
           </div>
-        </fieldset>
+        </div>
 
         {/* Address */}
-        <fieldset>
-          <legend className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.addressForLocker')}</legend>
+        <div className="min-w-0">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.addressForLocker')}</p>
           <div className="flex flex-col gap-3">
             <input type="text" placeholder={t('checkout.street')} required autoComplete="street-address" className={inputClass} {...field('address')} />
             <input type="text" placeholder={t('checkout.city')} required autoComplete="address-level2" className={inputClass} {...field('city')} />
             <input type="text" placeholder={t('checkout.postalCode')} required autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{4,10}" title="Enter a valid postal code" className={inputClass} {...field('postalCode')} />
           </div>
           <BoxNowWidget onLockerSelect={setLocker} selected={locker} />
-        </fieldset>
+        </div>
 
       </div>
 
-      <div className="flex flex-col gap-8">
-        <div>
+      <div className="flex flex-col gap-8 min-w-0">
+        <div className="min-w-0">
           <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">{t('checkout.orderSummary')}</p>
-          <div className="border border-[#1a1a1a]">
+          <div className="border border-[#1a1a1a] min-w-0">
             {cart.map((item, i) => (
               <div key={i} className="flex items-center gap-2 md:gap-3 px-3 md:px-4 py-3 border-b border-[#1a1a1a] last:border-b-0">
                 <div className="flex-1 min-w-0">
@@ -216,14 +216,14 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
           </div>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/40 mb-4">Payment</p>
           {!stripe ? (
             <div className="border border-[#FF2200]/40 bg-[#FF2200]/5 px-4 py-4 font-mono text-xs text-[#FF2200]/70">
               Payment not configured — Stripe key missing. Set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in Vercel and redeploy.
             </div>
           ) : (
-            <div className="border border-[#333] p-3 md:p-4 focus-within:border-[#FF2200] transition-colors overflow-x-hidden">
+            <div className="border border-[#333] p-3 md:p-4 focus-within:border-[#FF2200] transition-colors overflow-x-hidden min-w-0">
               <PaymentElement options={{ layout: { type: 'accordion', defaultCollapsed: false }, wallets: { applePay: 'auto', googlePay: 'auto' } }} />
             </div>
           )}
@@ -272,11 +272,11 @@ export default function CheckoutPage() {
   }
 
   if (cart.length === 0) return (
-    <div className="pt-20 overflow-x-hidden">
-      <div className="px-4 md:px-6 pt-12 md:pt-16 pb-8 md:pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
+    <div className="pt-20 overflow-x-hidden w-full max-w-full">
+      <div className="px-4 md:px-6 pt-12 md:pt-16 pb-8 md:pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto w-full">
         <h1 className="font-display text-4xl md:text-6xl lg:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
-      <div className="px-4 md:px-6 py-16 md:py-24 max-w-[1400px] mx-auto flex flex-col items-center gap-6">
+      <div className="px-4 md:px-6 py-16 md:py-24 max-w-[1400px] mx-auto w-full flex flex-col items-center gap-6">
         <p className="font-mono text-sm text-[#F0EDE8]/40 uppercase tracking-widest">Your cart is empty</p>
         <a href="/products" className="font-mono text-xs uppercase tracking-widest text-[#FF2200] hover:underline">Continue Shopping →</a>
       </div>
@@ -284,11 +284,11 @@ export default function CheckoutPage() {
   );
 
   return (
-    <div className="pt-20 overflow-x-hidden">
-      <div className="px-4 md:px-6 pt-12 md:pt-16 pb-8 md:pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
+    <div className="pt-20 overflow-x-hidden w-full max-w-full">
+      <div className="px-4 md:px-6 pt-12 md:pt-16 pb-8 md:pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto w-full">
         <h1 className="font-display text-4xl md:text-6xl lg:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
-      <div className="px-4 md:px-6 py-8 md:py-14 max-w-[1400px] mx-auto">
+      <div className="px-4 md:px-6 py-8 md:py-14 max-w-[1400px] mx-auto w-full">
         {options ? (
           <Elements stripe={stripePromise} options={options}>
             <CheckoutForm cart={cart} onUpdateQty={handleUpdateQty} onRemove={handleRemove} onSuccess={() => setCart([])} />
