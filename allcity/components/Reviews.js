@@ -1,32 +1,6 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { useLanguage } from './LanguageProvider';
-
-const reviews = [
-  {
-    name: 'Dimitris K.',
-    textEN: 'Quality is insane. The hoodie feels premium and the fit is perfect. Allcity is the real deal.',
-    textEL: 'Η ποιότητα είναι τρελή. Το hoodie είναι premium και η εφαρμογή τέλεια. Το Allcity είναι το real deal.',
-    rating: 5,
-  },
-  {
-    name: 'Maria P.',
-    textEN: 'Fast shipping to Athens and the packaging was clean. Already ordered twice.',
-    textEL: 'Γρήγορη αποστολή στην Αθήνα και η συσκευασία καθαρή. Έχω παραγγείλει ήδη δύο φορές.',
-    rating: 5,
-  },
-  {
-    name: 'Giannis R.',
-    textEN: 'Streetwear that actually feels street. Hood controlling, f*ck the game — they mean it.',
-    textEL: 'Streetwear που νιώθεις πραγματικά street. Hood controlling, f*ck the game — το εννοούν.',
-    rating: 5,
-  },
-  {
-    name: 'Elena T.',
-    textEN: 'Love the designs. Minimal but bold. Gets compliments every time I wear it.',
-    textEL: 'Λατρεύω τα σχέδια. Minimal αλλά bold. Παίρνω κομπλιμέντα κάθε φορά που το φοράω.',
-    rating: 5,
-  },
-];
 
 function Stars({ count }) {
   return (
@@ -42,6 +16,19 @@ function Stars({ count }) {
 
 export default function Reviews() {
   const { lang } = useLanguage();
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/reviews')
+      .then(r => r.json())
+      .then(data => { setReviews(Array.isArray(data) ? data : []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) return null;
+  if (reviews.length === 0) return null;
+
   return (
     <section className="border-t border-[#1a1a1a] bg-[#0d0d0d]">
       <div className="max-w-[1400px] mx-auto px-6 py-20">
@@ -55,12 +42,8 @@ export default function Reviews() {
           {reviews.map((r, i) => (
             <div key={i} className="border border-[#1a1a1a] p-6 flex flex-col gap-4 hover:border-[#333] transition-colors">
               <Stars count={r.rating} />
-              <p className="font-mono text-sm text-[#F0EDE8]/70 leading-relaxed flex-1">
-                {lang === 'el' ? r.textEL : r.textEN}
-              </p>
-              <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/30">
-                {r.name}
-              </p>
+              <p className="font-mono text-sm text-[#F0EDE8]/70 leading-relaxed flex-1">{r.text}</p>
+              <p className="font-mono text-[11px] uppercase tracking-widest text-[#F0EDE8]/30">{r.name}</p>
             </div>
           ))}
         </div>

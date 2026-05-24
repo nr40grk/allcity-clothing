@@ -3,6 +3,7 @@ import { getOrders, saveOrder, updateOrderStatus } from '@/lib/orders';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { render } from '@react-email/render';
 import { OrderConfirmationEmail } from '@/emails/OrderConfirmationEmail';
+import { ReviewRequestEmail } from '@/emails/ReviewRequestEmail';
 
 function isAuthorized(req) { return req.headers.get('x-admin-token') === process.env.ADMIN_PASSWORD; }
 
@@ -49,6 +50,26 @@ export async function POST(req) {
       });
     }
   } catch (e) { console.error('Order email failed:', e.message); }
+
+  // Send review request email (async, no blocking)
+  try {
+    const resend = getResend();
+    if (resend) {
+      const orderNum = saved.id || saved.orderNumber || Date.now();
+      const reviewHtml = await render(ReviewRequestEmail({
+        customerName: order.name,
+        orderNumber: orderNum,
+        reviewLink: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.allcityclothing.com'}/reviews?order=${saved.id || ''}`,
+        siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.allcityclothing.com',
+      }));
+      await resend.emails.send({
+        from: FROM_EMAIL,
+        to: order.email,
+        subject: `How was your ALLCITY order? — Write a review`,
+        html: reviewHtml,
+      });
+    }
+  } catch (e) { console.error('Review request email failed:', e.message); }
 
   return NextResponse.json(saved);
 }
