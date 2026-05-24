@@ -1,12 +1,14 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import ProductCard from '@/components/ProductCard';
 import { useT } from '@/components/LanguageProvider';
 import { addToCart } from '@/lib/cart';
 
 export default function ProductDetail({ product, allProducts = [] }) {
   const t = useT();
+  const router = useRouter();
   const [selectedSize, setSelectedSize] = useState(null);
   const [qty, setQty] = useState(1);
   const [activeImg, setActiveImg] = useState(0);
@@ -21,6 +23,12 @@ export default function ProductDetail({ product, allProducts = [] }) {
     addToCart(product, selectedSize, qty);
     setAddedMsg(`${t('product.addedToCart')} — ${product.name} / ${selectedSize}`);
     setTimeout(() => setAddedMsg(''), 3000);
+  }
+
+  function handleBuyNow() {
+    if (!selectedSize) { setAddedMsg(t('product.selectSize')); return; }
+    addToCart(product, selectedSize, qty);
+    router.push('/checkout');
   }
 
   return (
@@ -95,7 +103,7 @@ export default function ProductDetail({ product, allProducts = [] }) {
           {product.available ? (
             <div className="flex flex-col gap-3">
               <button onClick={handleAddToCart} className="w-full font-mono text-xs uppercase tracking-widest bg-[#F0EDE8] text-[#080808] py-4 hover:bg-[#FF2200] transition-colors duration-200">{t('product.addToCart')}</button>
-              <Link href="/checkout" className="w-full font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/60 py-4 text-center hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">{t('product.buyNow')}</Link>
+              <button onClick={handleBuyNow} className="w-full font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/60 py-4 text-center hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">{t('product.buyNow')}</button>
               {addedMsg && <p className={`font-mono text-xs ${addedMsg.includes('select') || addedMsg.includes('επέλεξε') ? 'text-[#FF2200]' : 'text-[#F0EDE8]/50'}`}>{addedMsg}</p>}
             </div>
           ) : (
