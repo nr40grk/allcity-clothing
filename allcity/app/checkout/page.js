@@ -272,7 +272,7 @@ export default function CheckoutPage() {
   }
 
   if (cart.length === 0) return (
-    <div className="pt-20">
+    <div className="pt-20 overflow-x-hidden">
       <div className="px-4 md:px-6 pt-12 md:pt-16 pb-8 md:pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
         <h1 className="font-display text-4xl md:text-6xl lg:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
@@ -284,7 +284,7 @@ export default function CheckoutPage() {
   );
 
   return (
-    <div className="pt-20">
+    <div className="pt-20 overflow-x-hidden">
       <div className="px-4 md:px-6 pt-12 md:pt-16 pb-8 md:pb-10 border-b border-[#1a1a1a] max-w-[1400px] mx-auto">
         <h1 className="font-display text-4xl md:text-6xl lg:text-8xl text-[#F0EDE8] tracking-tight leading-none">{t('checkout.title')}</h1>
       </div>
