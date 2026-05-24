@@ -223,8 +223,8 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
               Payment not configured — Stripe key missing. Set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in Vercel and redeploy.
             </div>
           ) : (
-            <div className="border border-[#333] p-4 focus-within:border-[#FF2200] transition-colors">
-              <PaymentElement options={{ layout: 'tabs' }} />
+            <div className="border border-[#333] p-3 md:p-4 focus-within:border-[#FF2200] transition-colors overflow-x-hidden">
+              <PaymentElement options={{ layout: { type: 'accordion', defaultCollapsed: false } }} />
             </div>
           )}
           <p className="font-mono text-[11px] text-[#F0EDE8]/20 mt-2">{t('checkout.stripeNote')}</p>

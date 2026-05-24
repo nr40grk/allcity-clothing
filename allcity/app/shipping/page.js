@@ -39,7 +39,7 @@ export default function ShippingPage() {
           <h2 className="font-display text-2xl text-[#FF2200] tracking-widest mb-6">{t('shipping.paymentTitle')}</h2>
           <div className="flex flex-col gap-4 font-mono text-xs text-[#F0EDE8]/60 leading-relaxed">
             <p>{t('shipping.paymentBody')}</p>
-            <div className="flex flex-wrap gap-2">{['Visa','Mastercard','Amex','Apple Pay','Google Pay'].map(m => <span key={m} className="border border-[#333] font-mono text-[11px] px-3 py-1 text-[#F0EDE8]/40">{m}</span>)}</div>
+            <div className="flex flex-wrap gap-2">{['Apple Pay','Google Pay','Cards','Revolut','Link'].map(m => <span key={m} className="border border-[#333] font-mono text-[11px] px-3 py-1 text-[#F0EDE8]/40">{m}</span>)}</div>
           </div>
         </section>
         <section className="border-t border-[#1a1a1a] pt-10">
