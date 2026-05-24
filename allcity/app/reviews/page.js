@@ -1,9 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function WriteReviewPage() {
+function WriteReviewPageContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('order') || '';
   const [form, setForm] = useState({ name: '', text: '', rating: 5 });
@@ -63,5 +63,19 @@ export default function WriteReviewPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function WriteReviewPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[#080808] pt-20 px-6 pb-20">
+        <div className="max-w-[600px] mx-auto">
+          <p className="font-mono text-xs text-[#F0EDE8]/30">Loading...</p>
+        </div>
+      </div>
+    }>
+      <WriteReviewPageContent />
+    </Suspense>
   );
 }
