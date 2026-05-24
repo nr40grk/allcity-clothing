@@ -29,7 +29,7 @@ const translations = {
       returnsBody: 'You have the right to withdraw from your purchase within 14 days of receiving it, without giving any reason — in accordance with EU Directive 2011/83/EU.',
       returnsLink: 'View full Returns & Refunds Policy →',
       returnsNote: '* If your order arrives damaged or not as described, contact us immediately and we will resolve it at no cost to you.',
-      paymentTitle: 'Payment', paymentBody: 'We accept all major credit and debit cards, Apple Pay, and Google Pay — processed securely via Stripe.',
+      paymentTitle: 'Payment', paymentBody: 'We accept Apple Pay, Google Pay, Cards, Revolut, and Link — processed securely via Stripe.',
       contactTitle: 'Contact', findUs: 'Find us at @allcity_clothing — Athens, GR',
     },
     checkout: {
@@ -72,7 +72,7 @@ const translations = {
       returnsBody: 'Έχετε δικαίωμα υπαναχώρησης εντός 14 ημερών από την παραλαβή της παραγγελίας σας, χωρίς αιτιολόγηση — σύμφωνα με την Οδηγία 2011/83/ΕΕ.',
       returnsLink: 'Δείτε την πλήρη Πολιτική Επιστροφών →',
       returnsNote: '* Αν η παραγγελία σας φτάσει κατεστραμμένη ή διαφορετική από την περιγραφή, επικοινωνήστε μαζί μας άμεσα και θα το επιλύσουμε χωρίς επιβάρυνση.',
-      paymentTitle: 'Πληρωμή', paymentBody: 'Δεχόμαστε όλες τις μεγάλες κάρτες, Apple Pay και Google Pay — μέσω Stripe.',
+      paymentTitle: 'Πληρωμή', paymentBody: 'Δεχόμαστε Apple Pay, Google Pay, Cards, Revolut και Link — μέσω Stripe.',
       contactTitle: 'Επικοινωνία', findUs: 'Βρες μας στο @allcity_clothing — Αθήνα, GR',
     },
     checkout: {
