@@ -151,7 +151,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
 
   return (
     <>
-      {boxnowOpen && <div className="fixed inset-0 bg-black/90 z-40" aria-hidden="true" />}
+      {boxnowOpen && <div className="fixed inset-0 bg-black/95" style={{ zIndex: 99999 }} aria-hidden="true" />}
       <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 min-w-0">
       <div className="flex flex-col gap-8 min-w-0">
 
