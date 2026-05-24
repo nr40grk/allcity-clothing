@@ -7,11 +7,7 @@ export async function POST(req) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
-      automatic_payment_methods: {
-        enabled: true,
-        allow_redirects: 'never',
-      },
-      payment_method_types: ['card', 'apple_pay', 'google_pay', 'revolut_pay', 'link'],
+      payment_method_types: ['card', 'apple_pay', 'google_pay', 'link'],
     });
     return NextResponse.json({ clientSecret: paymentIntent.client_secret, paymentIntentId: paymentIntent.id });
   } catch (err) { return NextResponse.json({ error: err.message }, { status: 500 }); }
