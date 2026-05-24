@@ -147,15 +147,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
 
   return (
     <>
-      {boxnowOpen && (
-        <div
-          className="fixed inset-0 bg-black"
-          style={{ zIndex: 99999 }}
-          onClick={() => setBoxnowOpen(false)}
-          aria-hidden="true"
-        />
-      )}
-      <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 min-w-0">
+      <form onSubmit={handleSubmit} style={{ display: boxnowOpen ? 'none' : undefined }} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 min-w-0">
       <div className="flex flex-col gap-8 min-w-0">
 
         {/* Contact */}
