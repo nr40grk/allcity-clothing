@@ -36,7 +36,7 @@ function boxnowShippingFee(postalCode) {
   return 3.00;
 }
 
-function BoxNowWidget({ onLockerSelect, selected }) {
+function BoxNowWidget({ onLockerSelect, selected, onOpen }) {
   const callbackRef = useRef(null);
   callbackRef.current = onLockerSelect;
 
@@ -76,7 +76,7 @@ function BoxNowWidget({ onLockerSelect, selected }) {
       ) : (
         <p className="text-[#F0EDE8]/40 text-[11px]">No locker selected yet.</p>
       )}
-      <button type="button" className="bn-open-widget font-mono text-[11px] uppercase tracking-widest text-[#FF2200] hover:underline text-left">
+      <button type="button" onClick={onOpen} className="bn-open-widget font-mono text-[11px] uppercase tracking-widest text-[#FF2200] hover:underline text-left">
         {selected?.name ? '↺ Change Locker' : '+ Choose BoxNow Locker'}
       </button>
     </div>
@@ -89,9 +89,19 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   const elements = useElements();
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', city: '', postalCode: '' });
   const [locker, setLocker] = useState(null);
+  const [boxnowOpen, setBoxnowOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const hasPopup = !!document.querySelector('.bn-modal, .bn-popup, [class*="bn-modal"], [class*="bn-popup"]');
+      if (!hasPopup) setBoxnowOpen(false);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
   const shippingFee = boxnowShippingFee(form.postalCode);
   const total = subtotal + shippingFee;
@@ -140,7 +150,9 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 min-w-0">
+    <>
+      {boxnowOpen && <div className="fixed inset-0 bg-black/90 z-40" aria-hidden="true" />}
+      <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 min-w-0">
       <div className="flex flex-col gap-8 min-w-0">
 
         {/* Contact */}
@@ -161,7 +173,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
             <input type="text" placeholder={t('checkout.city')} required autoComplete="address-level2" className={inputClass} {...field('city')} />
             <input type="text" placeholder={t('checkout.postalCode')} required autoComplete="postal-code" inputMode="numeric" pattern="[0-9]{4,10}" title="Enter a valid postal code" className={inputClass} {...field('postalCode')} />
           </div>
-          <BoxNowWidget onLockerSelect={setLocker} selected={locker} />
+          <BoxNowWidget onLockerSelect={setLocker} selected={locker} onOpen={() => setBoxnowOpen(true)} />
         </div>
 
       </div>
@@ -240,6 +252,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
         </button>
       </div>
     </form>
+    </>
   );
 }
 
