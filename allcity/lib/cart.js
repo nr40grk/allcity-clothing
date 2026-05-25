@@ -37,3 +37,30 @@ export function clearCart() {
     window.dispatchEvent(new Event('storage'));
   }
 }
+
+export async function syncCartPrices() {
+  if (typeof window === 'undefined') return;
+  try {
+    const res = await fetch('/api/products');
+    if (!res.ok) return;
+    const products = await res.json();
+    const cart = getCart();
+    let changed = false;
+    const updated = cart.map(item => {
+      const product = products.find(p => p.id === item.productId || p.slug === item.slug);
+      if (!product) return item;
+      const currentPrice = product.salePrice && parseFloat(product.salePrice) < parseFloat(product.price)
+        ? parseFloat(product.salePrice)
+        : parseFloat(product.price);
+      if (currentPrice !== item.price) {
+        changed = true;
+        return { ...item, price: currentPrice, name: product.name, image: product.image };
+      }
+      return item;
+    });
+    if (changed) {
+      localStorage.setItem(CART_KEY, JSON.stringify(updated));
+      window.dispatchEvent(new Event('storage'));
+    }
+  } catch { /* silently fail */ }
+}

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useT } from '@/components/LanguageProvider';
-import { getCart, clearCart, updateCartQty, removeFromCart } from '@/lib/cart';
+import { getCart, clearCart, updateCartQty, removeFromCart, syncCartPrices } from '@/lib/cart';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 // 2-digit prefixes covering all major island groups
@@ -256,9 +256,15 @@ export default function CheckoutPage() {
   const [cart, setCart] = useState([]);
   const [options, setOptions] = useState(null);
 
-  useEffect(() => { setCart(getCart()); }, []);
+  useEffect(() => {
+    async function init() {
+      await syncCartPrices();
+      setCart(getCart());
+    }
+    init();
+  }, []);
 
-  const total = cart.reduce((s, i) => s + i.price * i.qty, 0) + 3.00;
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
 
   useEffect(() => {
     async function createIntent() {
