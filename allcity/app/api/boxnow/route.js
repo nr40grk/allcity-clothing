@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { findClosestBoxNowLocker } from '@/lib/boxnow';
+import { rateLimit, getClientIP } from '@/lib/rate-limit';
 export async function POST(req) {
+  const ip = getClientIP(req);
+  const limit = rateLimit(`boxnow:${ip}`, { max: 10, windowSeconds: 60 });
+  if (!limit.allowed) return NextResponse.json({ error: 'Too many requests.' }, { status: 429 });
   try {
     const body = await req.json();
     if (body.action === 'findLocker') {

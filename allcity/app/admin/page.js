@@ -4,12 +4,25 @@ import { useRouter } from 'next/navigation';
 export default function AdminLogin() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   async function handleLogin(e) {
-    e.preventDefault(); setError('');
-    const res = await fetch('/api/admin', { headers: { 'x-admin-token': password } });
-    if (res.ok) { sessionStorage.setItem('admin_token', password); router.push('/admin/products'); }
-    else setError('Wrong password.');
+    e.preventDefault(); setError(''); setLoading(true);
+    const res = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    });
+    setLoading(false);
+    if (res.ok) {
+      const data = await res.json();
+      sessionStorage.setItem('admin_token', data.token);
+      router.push('/admin/products');
+    } else if (res.status === 429) {
+      setError('Too many attempts. Wait a minute.');
+    } else {
+      setError('Wrong password.');
+    }
   }
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#080808]">
@@ -19,7 +32,7 @@ export default function AdminLogin() {
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} autoFocus className="bg-[#111] border border-[#333] text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20" />
           {error && <p className="font-mono text-xs text-[#FF2200]">{error}</p>}
-          <button type="submit" className="font-mono text-xs uppercase tracking-widest bg-[#F0EDE8] text-[#080808] py-3 hover:bg-[#FF2200] transition-colors">Enter →</button>
+          <button type="submit" disabled={loading} className="font-mono text-xs uppercase tracking-widest bg-[#F0EDE8] text-[#080808] py-3 hover:bg-[#FF2200] transition-colors disabled:opacity-40">{loading ? 'Checking...' : 'Enter →'}</button>
         </form>
       </div>
     </div>

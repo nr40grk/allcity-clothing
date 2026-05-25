@@ -5,11 +5,11 @@ import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { render } from '@react-email/render';
 import { OrderConfirmationEmail } from '@/emails/OrderConfirmationEmail';
 import { ReviewRequestEmail } from '@/emails/ReviewRequestEmail';
-
-function isAuthorized(req) { return req.headers.get('x-admin-token') === process.env.ADMIN_PASSWORD; }
+import { isAdmin } from '@/lib/auth';
+import { rateLimit, getClientIP } from '@/lib/rate-limit';
 
 export async function GET(req) {
-  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!isAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   return NextResponse.json(await getOrders());
 }
 
@@ -37,6 +37,10 @@ function deductStock(products, items) {
 }
 
 export async function POST(req) {
+  const ip = getClientIP(req);
+  const limit = rateLimit(`order:${ip}`, { max: 10, windowSeconds: 60 });
+  if (!limit.allowed) return NextResponse.json({ error: 'Too many requests.' }, { status: 429 });
+
   const order = await req.json();
   const saved = await saveOrder(order);
 
@@ -86,7 +90,7 @@ export async function POST(req) {
 }
 
 export async function PUT(req) {
-  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!isAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const { id, status } = await req.json();
   const updated = await updateOrderStatus(id, status);
 

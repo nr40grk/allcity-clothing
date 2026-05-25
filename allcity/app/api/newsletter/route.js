@@ -3,19 +3,16 @@ import { getSubscribers } from '@/lib/subscribers';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { NewsletterEmail } from '@/emails/NewsletterEmail';
 import { createElement } from 'react';
-
-function isAuthorized(req) {
-  return req.headers.get('x-admin-token') === process.env.ADMIN_PASSWORD;
-}
+import { isAdmin } from '@/lib/auth';
 
 export async function GET(req) {
-  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!isAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const subscribers = await getSubscribers();
   return NextResponse.json(subscribers);
 }
 
 export async function POST(req) {
-  if (!isAuthorized(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!isAdmin(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { subject, bodyText, ctaText, ctaUrl } = await req.json();
   if (!subject || !bodyText) {

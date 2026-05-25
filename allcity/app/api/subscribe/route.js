@@ -3,11 +3,15 @@ import { addSubscriber } from '@/lib/subscribers';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { WelcomeEmail } from '@/emails/WelcomeEmail';
 import { createElement } from 'react';
+import { rateLimit, getClientIP } from '@/lib/rate-limit';
 
 export async function POST(req) {
+  const ip = getClientIP(req);
+  const limit = rateLimit(`subscribe:${ip}`, { max: 5, windowSeconds: 60 });
+  if (!limit.allowed) return NextResponse.json({ error: 'Too many requests.' }, { status: 429 });
   try {
     const { email } = await req.json();
-    if (!email || !email.includes('@')) {
+    if (!email || typeof email !== 'string' || email.length > 254 || !/^[^\s@]+@[^\s@\.]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json({ error: 'Invalid email.' }, { status: 400 });
     }
 
