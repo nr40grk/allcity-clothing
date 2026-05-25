@@ -66,9 +66,11 @@ export default function AdminEmails() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Link href="/admin/products" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#F0EDE8]/30 transition-colors">
-              ← Products
-            </Link>
+            <Link href="/admin/products" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Products</Link>
+            <Link href="/admin/stock" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Stock</Link>
+            <Link href="/admin/sales" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Sales</Link>
+            <Link href="/admin/reviews" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Reviews</Link>
+            <Link href="/admin/settings" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Settings</Link>
             <button
               onClick={() => setShowCompose(!showCompose)}
               className="font-mono text-xs uppercase tracking-widest bg-[#FF2200] text-[#080808] px-4 py-2 hover:bg-[#F0EDE8] transition-colors"

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getOrders, saveOrder, updateOrderStatus } from '@/lib/orders';
+import { getProducts, saveProducts } from '@/lib/kv';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { render } from '@react-email/render';
 import { OrderConfirmationEmail } from '@/emails/OrderConfirmationEmail';
@@ -12,9 +13,39 @@ export async function GET(req) {
   return NextResponse.json(await getOrders());
 }
 
+function deductStock(products, items) {
+  const updated = products.map(p => {
+    const bought = items.filter(i => i.productId === p.id || i.slug === p.slug);
+    if (bought.length === 0) return p;
+    const stockBySizes = { ...(p.stockBySizes || {}) };
+    let sizes = [...(p.sizes || [])];
+    for (const item of bought) {
+      const size = item.size;
+      const qty = item.qty || 1;
+      if (size && stockBySizes[size] != null) {
+        stockBySizes[size] = Math.max(0, (stockBySizes[size] || 0) - qty);
+        if (stockBySizes[size] <= 0) {
+          sizes = sizes.filter(s => s !== size);
+          delete stockBySizes[size];
+        }
+      }
+    }
+    const available = sizes.length > 0;
+    return { ...p, stockBySizes, sizes, available };
+  });
+  return updated;
+}
+
 export async function POST(req) {
   const order = await req.json();
   const saved = await saveOrder(order);
+
+  // Auto-deduct stock
+  try {
+    const products = await getProducts();
+    const updated = deductStock(products, order.items || []);
+    await saveProducts(updated);
+  } catch (e) { console.error('Stock deduction failed:', e.message); }
 
   try {
     const resend = getResend();

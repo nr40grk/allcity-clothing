@@ -67,7 +67,9 @@ export default function AdminSales() {
           </div>
           <div className="flex gap-3">
             <Link href="/admin/products" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Products</Link>
+            <Link href="/admin/stock" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Stock</Link>
             <Link href="/admin/reviews" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Reviews</Link>
+            <Link href="/admin/emails" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Emails</Link>
             <Link href="/admin/settings" className="font-mono text-xs uppercase tracking-widest border border-[#333] text-[#F0EDE8]/50 px-4 py-2 hover:border-[#FF2200] hover:text-[#FF2200] transition-colors">Settings</Link>
           </div>
         </div>
