@@ -99,7 +99,7 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
-  const shippingFee = boxnowShippingFee(form.postalCode);
+  const shippingFee = 0;
   const total = subtotal + shippingFee;
 
   const inputClass = "bg-[#111] border border-[#333] text-[#F0EDE8] font-mono text-xs px-4 py-3 outline-none focus:border-[#FF2200] transition-colors placeholder-[#F0EDE8]/20 w-full";
@@ -213,8 +213,8 @@ function CheckoutForm({ cart, onUpdateQty, onRemove, onSuccess }) {
               <span className="font-mono text-xs text-[#F0EDE8]/60">€{subtotal.toFixed(2)}</span>
             </div>
             <div className="flex justify-between items-center px-4 py-3 border-b border-[#1a1a1a]">
-              <span className="font-mono text-xs text-[#F0EDE8]/40">BoxNow Shipping</span>
-              <span className="font-mono text-xs text-[#F0EDE8]/60">€{shippingFee.toFixed(2)}</span>
+              <span className="font-mono text-xs text-[#F0EDE8]/40">Shipping</span>
+              <span className="font-mono text-xs text-[#FF2200]/80">FREE</span>
             </div>
             <div className="flex justify-between items-center px-4 py-4 bg-[#111]">
               <span className="font-mono text-xs uppercase tracking-widest text-[#F0EDE8]/40">{t('checkout.total')}</span>

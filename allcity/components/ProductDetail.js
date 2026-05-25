@@ -76,6 +76,7 @@ export default function ProductDetail({ product, allProducts = [] }) {
               <p className="font-mono text-xl text-[#F0EDE8]/70 mt-2">€{Number(product.price).toFixed(2)}</p>
             )}
             <p className="font-mono text-[11px] text-[#F0EDE8]/30 mt-1">{t('product.taxIncluded')}</p>
+            <p className="font-mono text-[10px] text-[#FF2200]/80 uppercase tracking-widest mt-1">{t('product.freeShipping')}</p>
           </div>
 
           <div>

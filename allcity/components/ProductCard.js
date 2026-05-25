@@ -73,7 +73,10 @@ export default function ProductCard({ product }) {
       </div>
 
       <div className="pt-3 pb-1 flex items-start justify-between gap-2">
-        <p className="font-mono text-xs uppercase tracking-wide text-[#F0EDE8]/80 leading-snug">{product.name}</p>
+        <div className="flex flex-col gap-0.5">
+          <p className="font-mono text-xs uppercase tracking-wide text-[#F0EDE8]/80 leading-snug">{product.name}</p>
+          <span className="font-mono text-[10px] text-[#FF2200]/80 uppercase tracking-widest">{t('product.freeShipping')}</span>
+        </div>
         <div className="flex flex-col items-end flex-shrink-0">
           {onSale ? (
             <>
