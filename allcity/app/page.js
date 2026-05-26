@@ -7,22 +7,19 @@ import { useT, useLanguage } from '@/components/LanguageProvider';
 
 function HeroVideo() {
   const src = process.env.NEXT_PUBLIC_HERO_VIDEO_MOBILE || '/videos/mobile-hero.mp4';
+  const poster = '/videos/poster.jpg';
+
+  const mobileHtml = `<video autoplay muted loop playsinline webkit-playsinline="true" disableRemotePlayback poster="${poster}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"><source src="${src}" type="video/mp4"></video>`;
+  const desktopHtml = `<video autoplay muted loop playsinline webkit-playsinline="true" disableRemotePlayback poster="${poster}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"><source src="${src}" type="video/mp4"></video>`;
+
   return (
     <>
       {/* Mobile: full-screen background */}
-      <div className="md:hidden absolute inset-0 overflow-hidden">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={src} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-[#080808]/55" />
-      </div>
+      <div className="md:hidden absolute inset-0 overflow-hidden bg-[#080808]" dangerouslySetInnerHTML={{ __html: mobileHtml }} />
+      <div className="md:hidden absolute inset-0 bg-[#080808]/55" />
       {/* Desktop: right-side vertical panel */}
-      <div className="hidden md:block absolute top-0 right-0 bottom-0 w-[42%] overflow-hidden border-l border-[#1a1a1a]">
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={src} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-[#080808]/25" />
-      </div>
+      <div className="hidden md:block absolute top-0 right-0 bottom-0 w-[42%] overflow-hidden border-l border-[#1a1a1a] bg-[#080808]" dangerouslySetInnerHTML={{ __html: desktopHtml }} />
+      <div className="hidden md:block absolute top-0 right-0 bottom-0 w-[42%] bg-[#080808]/25" />
     </>
   );
 }
