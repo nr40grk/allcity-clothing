@@ -9,14 +9,21 @@ function HeroVideo() {
   const mobileRef = useRef(null);
   const desktopRef = useRef(null);
   const src = process.env.NEXT_PUBLIC_HERO_VIDEO_MOBILE || '/videos/mobile-hero.mp4';
+  const poster = '/og-image.png';
 
   useEffect(() => {
-    [mobileRef, desktopRef].forEach(ref => {
-      const video = ref.current;
-      if (video) {
-        video.muted = true;
-        video.playsInline = true;
-        video.play().catch(() => {});
+    const videos = [mobileRef.current, desktopRef.current].filter(Boolean);
+    videos.forEach(video => {
+      video.muted = true;
+      video.playsInline = true;
+      video.setAttribute('muted', '');
+      video.setAttribute('playsinline', '');
+
+      const attempt = () => video.play().catch(() => {});
+      if (video.readyState >= 2) {
+        attempt();
+      } else {
+        video.addEventListener('loadeddata', attempt, { once: true });
       }
     });
   }, []);
@@ -24,15 +31,15 @@ function HeroVideo() {
   return (
     <>
       {/* Mobile: full-screen background */}
-      <div className="md:hidden absolute inset-0 overflow-hidden">
-        <video ref={mobileRef} autoPlay muted loop playsInline preload="auto" className="absolute inset-0 w-full h-full object-cover">
+      <div className="md:hidden absolute inset-0 overflow-hidden bg-[#080808]">
+        <video ref={mobileRef} autoPlay muted loop playsInline preload="auto" poster={poster} className="absolute inset-0 w-full h-full object-cover">
           <source src={src} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-[#080808]/55" />
       </div>
       {/* Desktop: right-side vertical panel */}
-      <div className="hidden md:block absolute top-0 right-0 bottom-0 w-[42%] overflow-hidden border-l border-[#1a1a1a]">
-        <video ref={desktopRef} autoPlay muted loop playsInline preload="auto" className="absolute inset-0 w-full h-full object-cover">
+      <div className="hidden md:block absolute top-0 right-0 bottom-0 w-[42%] overflow-hidden border-l border-[#1a1a1a] bg-[#080808]">
+        <video ref={desktopRef} autoPlay muted loop playsInline preload="auto" poster={poster} className="absolute inset-0 w-full h-full object-cover">
           <source src={src} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-[#080808]/25" />
