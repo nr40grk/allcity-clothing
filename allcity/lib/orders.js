@@ -28,3 +28,12 @@ export async function updateOrderStatus(id, status) {
   if (!result) throw new Error('Order not found');
   return result;
 }
+
+export async function updateOrderBoxNow(id, { deliveryId, trackingNumber, voucherUrl }) {
+  if (!process.env.MONGODB_URI) return;
+  const db = await getDb();
+  await db.collection('orders').updateOne(
+    { id },
+    { $set: { boxnowDeliveryId: deliveryId, boxnowTrackingNumber: trackingNumber, boxnowVoucherUrl: voucherUrl } }
+  );
+}

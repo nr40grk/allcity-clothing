@@ -137,6 +137,18 @@ export default function AdminSales() {
                           {order.deliveryMethod === 'boxnow' && order.boxnowLockerAddress && (
                             <p className="font-mono text-xs text-[#F0EDE8]/50">{order.boxnowLockerAddress}</p>
                           )}
+                          {order.boxnowTrackingNumber && (
+                            <p className="font-mono text-[11px] text-[#F0EDE8]/40 mt-1">Tracking: {order.boxnowTrackingNumber}</p>
+                          )}
+                          {order.boxnowVoucherUrl && (
+                            <a href={order.boxnowVoucherUrl} target="_blank" rel="noopener noreferrer"
+                              className="font-mono text-[11px] text-[#FF2200] hover:underline mt-1 block">
+                              ↓ Download Voucher
+                            </a>
+                          )}
+                          {order.deliveryMethod === 'boxnow' && !order.boxnowDeliveryId && (
+                            <p className="font-mono text-[11px] text-[#FF8800]/60 mt-1">Voucher pending</p>
+                          )}
                         </div>
                       </div>
 

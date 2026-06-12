@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getOrders, saveOrder, updateOrderStatus } from '@/lib/orders';
+import { getOrders, saveOrder, updateOrderStatus, updateOrderBoxNow } from '@/lib/orders';
+import { createDeliveryRequest } from '@/lib/boxnow';
 import { getProducts, saveProducts } from '@/lib/kv';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { render } from '@react-email/render';
@@ -43,6 +44,27 @@ export async function POST(req) {
 
   const order = await req.json();
   const saved = await saveOrder(order);
+
+  // Create BoxNow delivery request — fire-and-forget, never blocks the order
+  if (order.deliveryMethod === 'boxnow' && order.boxnowLockerId && process.env.BOXNOW_CLIENT_ID) {
+    try {
+      const delivery = await createDeliveryRequest({
+        orderId: saved.id,
+        recipientName: order.name,
+        recipientEmail: order.email,
+        recipientPhone: order.phone,
+        lockerId: order.boxnowLockerId,
+      });
+      await updateOrderBoxNow(saved.id, {
+        deliveryId: delivery.deliveryId,
+        trackingNumber: delivery.trackingNumber,
+        voucherUrl: delivery.voucherUrl,
+      });
+      saved.boxnowDeliveryId = delivery.deliveryId;
+      saved.boxnowTrackingNumber = delivery.trackingNumber;
+      saved.boxnowVoucherUrl = delivery.voucherUrl;
+    } catch (e) { console.error('BoxNow delivery creation failed:', e.message); }
+  }
 
   // Auto-deduct stock
   try {
