@@ -27,23 +27,26 @@ export async function findClosestBoxNowLocker({ city, street, postalCode, region
   return res.json();
 }
 
-export async function createDeliveryRequest({ orderId, recipientName, recipientEmail, recipientPhone, lockerId, parcelsCount = 1 }) {
+export async function createDeliveryRequest({ orderId, recipientName, recipientEmail, recipientPhone, lockerId, orderTotal = 0, parcelsCount = 1 }) {
   const token = await getBoxNowToken();
-  const res = await fetch(`${BASE_URL}/api/v2/delivery-requests`, {
+  const value = Number(orderTotal).toFixed(2);
+  const res = await fetch(`${BASE_URL}/api/v1/delivery-requests`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify({
-      partnerId: String(process.env.BOXNOW_PARTNER_ID),
-      deliveries: [{
-        externalOrderId: String(orderId),
-        recipientName,
-        recipientEmail,
-        recipientPhone,
-        lockerId: Number(lockerId),
-        warehouseId: Number(process.env.BOXNOW_WAREHOUSE_ID || 2),
-        parcelsCount,
-        codAmount: 0,
-      }],
+      partnerId: Number(process.env.BOXNOW_PARTNER_ID),
+      orderNumber: String(orderId),
+      paymentMode: 'prepaid',
+      amountToBeCollected: '0.00',
+      invoiceValue: value,
+      origin: { locationId: String(process.env.BOXNOW_WAREHOUSE_ID || 2) },
+      destination: {
+        locationId: String(lockerId),
+        contactName: recipientName,
+        contactEmail: recipientEmail,
+        contactNumber: recipientPhone,
+      },
+      items: [{ count: parcelsCount, value, description: 'Clothing' }],
     }),
   });
   if (!res.ok) {
@@ -51,7 +54,13 @@ export async function createDeliveryRequest({ orderId, recipientName, recipientE
     throw new Error(`BoxNow delivery creation failed: ${res.status} ${body}`);
   }
   const data = await res.json();
-  return data.deliveries?.[0] ?? data;
+  // Normalize response — extract whichever field names BoxNow returns
+  return {
+    deliveryId: data.id ?? data.deliveryId ?? data.deliveryRequestId,
+    trackingNumber: data.trackingNumber ?? data.trackingCode ?? data.barcode,
+    voucherUrl: data.voucherUrl ?? data.labelUrl ?? data.pdfUrl ?? data.voucher?.url,
+    raw: data,
+  };
 }
 
 export function verifyWebhookSignature(rawBody, signature) {

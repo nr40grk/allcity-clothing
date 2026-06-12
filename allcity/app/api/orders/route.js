@@ -54,6 +54,7 @@ export async function POST(req) {
         recipientEmail: order.email,
         recipientPhone: order.phone,
         lockerId: order.boxnowLockerId,
+        orderTotal: order.total,
       });
       await updateOrderBoxNow(saved.id, {
         deliveryId: delivery.deliveryId,
