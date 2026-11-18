@@ -5,11 +5,11 @@ import Footer from '@/components/Footer';
 import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
-  title: 'ALLCITY — Apparel Born in the Streets',
+  title: 'ALLCITY Clothing',
   description: 'Street apparel. Hood controlling. F*ck the game.',
   metadataBase: new URL('https://www.allcityclothing.com'),
   openGraph: {
-    title: 'ALLCITY — Apparel Born in the Streets',
+    title: 'ALLCITY Clothing',
     description: 'Street apparel. Hood controlling. F*ck the game.',
     url: 'https://www.allcityclothing.com',
     siteName: 'ALLCITY',
@@ -18,7 +18,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ALLCITY — Apparel Born in the Streets',
+    title: 'ALLCITY Clothing',
     description: 'Street apparel. Hood controlling. F*ck the game.',
     images: ['/og-image.png'],
   },
