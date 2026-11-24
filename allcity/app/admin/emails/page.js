@@ -106,7 +106,7 @@ export default function AdminEmails() {
             <div>
               <label className="label">Subject *</label>
               <input required value={form.subject} onChange={e => setForm({...form, subject: e.target.value})}
-                className="input w-full" placeholder="NEW DROP — SS25 Available Now" />
+                className="input w-full" placeholder="NEW DROP — SS26 Available Now" />
             </div>
 
             <div>

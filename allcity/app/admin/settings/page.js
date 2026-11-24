@@ -121,8 +121,8 @@ export default function AdminSettings() {
           <div className="grid grid-cols-2 gap-4">
             <div><label className="label">Title (EN)</label><input value={ban.titleEN} onChange={e => setBan('titleEN', e.target.value)} className="input w-full" placeholder="NEW DROP" /></div>
             <div><label className="label">Title (GR)</label><input value={ban.titleGR} onChange={e => setBan('titleGR', e.target.value)} className="input w-full" placeholder="ΝΕΑ ΣΥΛΛΟΓΗ" /></div>
-            <div><label className="label">Subtitle (EN)</label><input value={ban.subtitleEN} onChange={e => setBan('subtitleEN', e.target.value)} className="input w-full" placeholder="SS25 — Available Now" /></div>
-            <div><label className="label">Subtitle (GR)</label><input value={ban.subtitleGR} onChange={e => setBan('subtitleGR', e.target.value)} className="input w-full" placeholder="Συλλογή ΑΧ25..." /></div>
+            <div><label className="label">Subtitle (EN)</label><input value={ban.subtitleEN} onChange={e => setBan('subtitleEN', e.target.value)} className="input w-full" placeholder="SS26 — Available Now" /></div>
+            <div><label className="label">Subtitle (GR)</label><input value={ban.subtitleGR} onChange={e => setBan('subtitleGR', e.target.value)} className="input w-full" placeholder="Συλλογή ΑΧ26..." /></div>
             <div><label className="label">Button (EN)</label><input value={ban.ctaTextEN} onChange={e => setBan('ctaTextEN', e.target.value)} className="input w-full" placeholder="Shop Now" /></div>
             <div><label className="label">Button (GR)</label><input value={ban.ctaTextGR} onChange={e => setBan('ctaTextGR', e.target.value)} className="input w-full" placeholder="Αγόρασε Τώρα" /></div>
             <div className="col-span-2"><label className="label">Button Link</label><input value={ban.ctaLink} onChange={e => setBan('ctaLink', e.target.value)} className="input w-full" placeholder="/products" /></div>

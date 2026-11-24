@@ -5,10 +5,10 @@ const translations = {
   en: {
     nav: { home: 'Home', products: 'Products', about: 'About Us', shipping: 'Shipping & Payment' },
     home: {
-      collection: 'SS25 Collection', location: 'Athens, GR',
+      collection: 'SS26 Collection', location: 'Athens, GR',
       tagline: 'Apparel born in the streets. No rules. No limits. Hood Controlling. F*ck the Game. Allcity Clothing.',
       shopNow: 'Shop Now', viewAll: 'View All →', productsTitle: 'Products',
-      strip1Label: 'Free Shipping', strip1Desc: 'Free shipping on all orders this month. Greece, Cyprus & Bulgaria: 1–3 days. International: calculated at checkout.',
+      strip1Label: 'Free Shipping', strip1Desc: 'Free shipping on all orders. Greece, Cyprus & Bulgaria: 1–3 days. International: calculated at checkout.',
       strip2Label: 'Street Quality', strip2Desc: 'Every piece is built for the city. No compromises on material or construction.',
       strip3Label: 'DM for Info', strip3Desc: 'Reach us on Instagram @allcity_clothing or via email for any questions.',
     },
@@ -21,7 +21,7 @@ const translations = {
     },
     shipping: {
       title: 'Shipping &\nPayment', shippingTitle: 'Shipping',
-      shippingBody: 'All orders ship free this month via courier within 2 days after being confirmed.',
+      shippingBody: 'All orders ship free via courier within 2 days after being confirmed.',
       estimatedDelivery: 'Estimated Delivery Time', domestic: 'Greece, Cyprus, Bulgaria',
       domesticTime: '1–3 working days', international: 'International', internationalTime: 'Calculated at checkout',
       note: '* For any issues or questions regarding your order, contact us and we will get back to you as soon as possible.',
@@ -48,10 +48,10 @@ const translations = {
   el: {
     nav: { home: 'Αρχική', products: 'Προϊόντα', about: 'Σχετικά με εμάς', shipping: 'Αποστολή & Πληρωμή' },
     home: {
-      collection: 'Συλλογή ΑΧ25', location: 'Αθήνα, GR',
+      collection: 'Συλλογή ΑΧ26', location: 'Αθήνα, GR',
       tagline: 'Ρούχα γεννημένα στους δρόμους. Χωρίς κανόνες. Χωρίς όρια. Hood Controlling. F*ck the Game. Allcity Clothing.',
       shopNow: 'Αγόρασε Τώρα', viewAll: 'Δες Όλα →', productsTitle: 'Προϊόντα',
-      strip1Label: 'Δωρεάν Αποστολή', strip1Desc: 'Δωρεάν αποστολή σε όλες τις παραγγελίες αυτό τον μήνα. Ελλάδα, Κύπρος & Βουλγαρία: 1–3 μέρες. Διεθνώς: υπολογίζεται στο checkout.',
+      strip1Label: 'Δωρεάν Αποστολή', strip1Desc: 'Δωρεάν αποστολή σε όλες τις παραγγελίες. Ελλάδα, Κύπρος & Βουλγαρία: 1–3 μέρες. Διεθνώς: υπολογίζεται στο checkout.',
       strip2Label: 'Street Ποιότητα', strip2Desc: 'Κάθε κομμάτι φτιαγμένο για την πόλη. Χωρίς συμβιβασμούς.',
       strip3Label: 'DM for Info', strip3Desc: 'Επικοινώνησε μαζί μας στο Instagram @allcity_clothing ή μέσω email.',
     },
@@ -64,7 +64,7 @@ const translations = {
     },
     shipping: {
       title: 'Αποστολή &\nΠληρωμή', shippingTitle: 'Αποστολή',
-      shippingBody: 'Δωρεάν αποστολή σε όλες τις παραγγελίες αυτό τον μήνα μέσω courier εντός 2 ημερών.',
+      shippingBody: 'Δωρεάν αποστολή σε όλες τις παραγγελίες μέσω courier εντός 2 ημερών.',
       estimatedDelivery: 'Εκτιμώμενος Χρόνος Παράδοσης', domestic: 'Ελλάδα, Κύπρος, Βουλγαρία',
       domesticTime: '1–3 εργάσιμες ημέρες', international: 'Διεθνώς', internationalTime: 'Υπολογίζεται στο checkout',
       note: '* Για οποιοδήποτε πρόβλημα, επικοινώνησε μαζί μας.',
