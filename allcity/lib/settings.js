@@ -2,7 +2,7 @@ import { getDb } from './db';
 
 export const DEFAULT_SETTINGS = {
   announcement: { active: false, textEN: 'FREE SHIPPING ON ORDERS OVER €80', textGR: 'ΔΩΡΕΑΝ ΑΠΟΣΤΟΛΗ ΓΙΑ ΠΑΡΑΓΓΕΛΙΕΣ ΑΝΩ ΤΩΝ €80', color: 'red' },
-  banner: { active: false, titleEN: 'NEW DROP', titleGR: 'ΝΕΑ ΣΥΛΛΟΓΗ', subtitleEN: 'SS25 Collection — Available Now', subtitleGR: 'Συλλογή ΑΧ25 — Τώρα Διαθέσιμη', ctaTextEN: 'Shop Now', ctaTextGR: 'Αγόρασε Τώρα', ctaLink: '/products', image: '' },
+  banner: { active: false, titleEN: 'NEW DROP', titleGR: 'ΝΕΑ ΣΥΛΛΟΓΗ', subtitleEN: 'SS26 Collection — Available Now', subtitleGR: 'Συλλογή ΑΧ26 — Τώρα Διαθέσιμη', ctaTextEN: 'Shop Now', ctaTextGR: 'Αγόρασε Τώρα', ctaLink: '/products', image: '' },
   clothingTypes: ['jackets', 'hoodies', 'tees', 'pants', 'accessories'],
 };
 
